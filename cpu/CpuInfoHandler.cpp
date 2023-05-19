@@ -4,7 +4,13 @@
 #include <QMessageBox>
 #include <QTextStream>
 
-CpuInfoHandler::CpuInfoHandler() {}
+CpuInfoHandler::CpuInfoHandler() {
+    try {
+        cpu_name = getCpuName();
+    } catch (QString e) {
+        cpu_name = e;
+    }
+}
 
 QString CpuInfoHandler::getCpuName() {
     QFile file("/proc/cpuinfo");
