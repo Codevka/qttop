@@ -1,4 +1,5 @@
 #include "CpuInfoHandler.h"
+
 #include <QDebug>
 #include <QFile>
 #include <QMessageBox>
@@ -10,6 +11,8 @@ CpuInfoHandler::CpuInfoHandler() {
     } catch (QString e) {
         cpu_name = e;
     }
+
+    updateCpuHz();
 }
 
 QString CpuInfoHandler::getCpuName() {
@@ -29,4 +32,31 @@ QString CpuInfoHandler::getCpuName() {
         }
     } while (!ins.atEnd());
     return QString("无法获取CPU名称");
+}
+
+void CpuInfoHandler::updateCpuHz() {
+    try {
+        cpu_hz = getCpuHz();
+    } catch (QString e) {
+        cpu_hz = e;
+    }
+}
+
+QString CpuInfoHandler::getCpuHz() {
+    static int failed = 0;
+
+    if (failed > 4)
+        return QString("");
+
+    QString freq_path
+        = "/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq";
+    QFile file(freq_path);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        throw "无法获取CPU频率信息";
+    }
+
+    QString cpu_hz_tmp = file.readLine();
+    double  hz         = cpu_hz_tmp.toDouble() / 1000.0;
+    QString cpu_mhz    = QString::number(hz, 'f', 0) + " MHz";
+    return cpu_mhz;
 }
