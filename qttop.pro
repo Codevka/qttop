@@ -11,16 +11,19 @@ CONFIG += console
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    memwindow.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    memwindow.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    memwindow.ui
 
 include(cpu/cpu.pri)
-
+LIBS += -lpthread
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
