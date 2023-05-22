@@ -5,6 +5,9 @@
 #include <QMessageBox>
 #include <QTextStream>
 
+#include <fstream>
+#include <string>
+
 CpuInfoHandler::CpuInfoHandler() {
     try {
         cpu_name = getCpuName();
@@ -83,4 +86,16 @@ QString CpuInfoHandler::getCpuHz() {
     }
     QString cpu_mhz = QString::number(hz, 'f', 0) + " MHz";
     return cpu_mhz;
+}
+
+CpuInfo& CpuInfoHandler::collectCpuInfo() {
+    std::string load_avg_path = "/proc/loadavg";
+    std::ifstream ifs;
+    ifs.open(load_avg_path);
+    if (ifs.good()) {
+        ifs >> this->cur_cpu.load_avg_1_5_15[0] >> this->cur_cpu.load_avg_1_5_15[1] >> this->cur_cpu.load_avg_1_5_15[2];
+    }
+    ifs.close();
+
+    return this->cur_cpu;
 }

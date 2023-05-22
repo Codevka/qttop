@@ -11,6 +11,18 @@
 
 #include <QDebug>
 
+typedef struct CpuInfo {
+    QMap<QString, QQueue<uint64_t>> cpu_percent = {
+        { "total", {} },
+        { "user", {} },
+        { "system", {} },
+    };
+    QVector<QQueue<uint64_t>> core_percent;
+    QVector<QQueue<uint64_t>> temperature;
+    uint64_t                  max_temperature;
+    QVarLengthArray<float, 3> load_avg_1_5_15;
+} CpuInfo;
+
 class CpuInfoHandler {
 public:
     static std::shared_ptr<CpuInfoHandler> getInstance() {
@@ -22,10 +34,13 @@ public:
     QString getCpuName();
     QString getCpuHz();
     void    updateCpuHz();
+    CpuInfo& collectCpuInfo();
 
+public:
     QString          cpu_name;
     QString          cpu_hz;
     QVector<QString> available_fields; // total, user, system
+    CpuInfo          cur_cpu;
 
 public:
     CpuInfoHandler(const CpuInfoHandler &)            = delete;
@@ -38,16 +53,5 @@ private:
     CpuInfoHandler();
 };
 
-typedef struct CpuInfo {
-    QMap<QString, QQueue<uint64_t>> cpu_percent = {
-        { "total", {} },
-        { "user", {} },
-        { "system", {} },
-    };
-    QVector<QQueue<uint64_t>> core_percent;
-    QVector<QQueue<uint64_t>> temperature;
-    uint64_t                  max_temperature;
-    QVarLengthArray<float, 3> load_avg_1_5_15;
-} CpuInfo;
 
 #endif // CPUINFOHANDLER_H
