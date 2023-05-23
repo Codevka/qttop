@@ -7,6 +7,8 @@
 #include <filesystem>
 #include <unistd.h>
 #include <thread>
+#include <sys/types.h>
+#include <signal.h>
 
 using std::max;
 using std::string;
@@ -75,7 +77,7 @@ namespace Proc
     uint64_t old_cputimes{};
     uint64_t ticks{};
 
-    vector<ProcessInfo> getProcesses(int64_t duration)
+    vector<ProcessInfo> get_processes(int64_t duration)
     {
         // Get the total CPU time
         std::ifstream stat_file("/proc/stat");
@@ -208,15 +210,21 @@ namespace Proc
         return processes;
     }
 
+    int send_signal(int pid, int sig)
+    {
+        return kill(pid, sig);
+    }
+
 }
 
 int main()
 {
     Shared::init();
+    #if 0
     printf("Cores:%ld, Pagesize:%ld\n", Shared::coreCount, Shared::pageSize);
     for (;;)
     {
-        auto processes = Proc::getProcesses(1);
+        auto processes = Proc::get_processes(1);
         printf("-------------------------------------------------------------------\n");
         printf("CPU Time: %lu\n", Proc::old_cputimes);
         for (int i = 0; i < 5; i++)
@@ -229,4 +237,6 @@ int main()
         printf("-------------------------------------------------------------------\n\n");
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
+    #endif
+    Proc::send_signal(354018, 15);
 }
