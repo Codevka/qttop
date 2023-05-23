@@ -8,9 +8,9 @@
 #include <unistd.h>
 #include <thread>
 
+using std::max;
 using std::string;
 using std::vector;
-using std::max;
 
 namespace fs = std::filesystem;
 
@@ -66,13 +66,16 @@ namespace Proc
         uint64_t cpu_t{};
         double cpu_p{};
         uint64_t memory{};
-        double power_consumption{};
+        uint64_t wakeups{};
+        double power{};
+        uint64_t ticks{};
     };
 
     vector<ProcessInfo> processes;
     uint64_t old_cputimes{};
+    uint64_t ticks{};
 
-    vector<ProcessInfo> getProcesses()
+    vector<ProcessInfo> getProcesses(int64_t duration)
     {
         // Get the total CPU time
         std::ifstream stat_file("/proc/stat");
@@ -109,7 +112,7 @@ namespace Proc
             bool no_cache{}; // defaults to false
             if (find_old == processes.end())
             {
-                processes.push_back({pid : pid});
+                processes.push_back({pid : pid, ticks : ticks});
                 find_old = processes.end() - 1;
                 no_cache = true;
             }
@@ -149,7 +152,7 @@ namespace Proc
                 start_pos = end_pos + 1;
             }
 
-            //? Get RSS memory from /proc/[pid]/statm if value from /proc/[pid]/stat looks wrong
+            // 获取内存
             std::ifstream statm_file(entry.path() / "statm");
             statm_file.ignore(Shared::SSmax, ' ');
             statm_file >> proc.memory;
@@ -159,14 +162,44 @@ namespace Proc
             //? Process cpu usage since last update
             proc.cpu_p = std::clamp(100.0 * (cpu_t - proc.cpu_t) / max((uint64_t)1, cpu_times - old_cputimes), 0.0, 100.0);
 
+            /* 计算进程的功耗 */
+            std::ifstream status_file(entry.path() / "status");
+            std::string content((std::istreambuf_iterator<char>(status_file)), std::istreambuf_iterator<char>());
+            status_file.close();
+            size_t pos1 = content.find("voluntary_ctxt_switches:");
+            size_t pos2 = content.find("nonvoluntary_ctxt_switches:");
+            pos1 = content.find_first_not_of(" \t", pos1 + 24);
+            pos2 = content.find_first_not_of(" \t", pos2 + 27);
+            uint64_t wakeups = 0;
+            try
+            {
+                wakeups += std::stoull(content.substr(pos1, content.find("\n", pos1) - pos1));
+                wakeups += std::stoull(content.substr(pos2, content.find("\n", pos2) - pos2));
+            }
+            catch (const std::invalid_argument &)
+            {
+                continue;
+            }
+            catch (const std::out_of_range &)
+            {
+                continue;
+            }
+
+            proc.power = (3.95 * (wakeups - proc.wakeups) + 15.0 * (cpu_t - proc.cpu_t)) / duration;
+
             //? Update cached value with latest cpu times
             proc.cpu_t = cpu_t;
-
-            // Get the process power consumption (not implemented)
-            proc.power_consumption = 0.0;
+            proc.wakeups = wakeups;
+            proc.ticks++;
         }
 
         old_cputimes = cpu_times;
+
+        // 调用计数
+        ticks++;
+        processes.erase(std::remove_if(processes.begin(), processes.end(), [](const ProcessInfo &proc)
+                                       { return proc.ticks < ticks; }),
+                        processes.end());
 
         // Sort the processes by CPU usage
         std::sort(processes.begin(), processes.end(), [](const ProcessInfo &a, const ProcessInfo &b)
@@ -183,16 +216,15 @@ int main()
     printf("Cores:%ld, Pagesize:%ld\n", Shared::coreCount, Shared::pageSize);
     for (;;)
     {
-        auto processes = Proc::getProcesses();
+        auto processes = Proc::getProcesses(1);
         printf("-------------------------------------------------------------------\n");
         printf("CPU Time: %lu\n", Proc::old_cputimes);
         for (int i = 0; i < 5; i++)
         {
             const auto process = processes[i];
-            std::cout << "Name: " << process.name << ", PID: " << process.pid << ", CPU Usage: " << process.cpu_p << "%"
-                      << ", CPU_T: " << process.cpu_t
-                      << ", Memory: " << (process.memory > 20) << " MB"
-                      << ", Power Consumption: " << process.power_consumption << " mW" << '\n';
+            std::cout << "Name: " << process.name;
+            printf(", PID: %d, CPU Usage: %.1lf%%, CPU_T: %lu, Memory: %.1lfMB, Wakeups: %lu, Power Consumption: %.1lfmW\n",
+                   process.pid, process.cpu_p, process.cpu_t, process.memory * 1.0 / (1 << 20), process.wakeups, process.power);
         }
         printf("-------------------------------------------------------------------\n\n");
         std::this_thread::sleep_for(std::chrono::seconds(1));
