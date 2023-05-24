@@ -18,6 +18,7 @@ CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuI
 
     this->timer.start(1000 * time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_cpu_hz()));
+    connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_cpu_collect()));
 }
 
 CpuInfoWidget::~CpuInfoWidget() {
@@ -27,4 +28,12 @@ CpuInfoWidget::~CpuInfoWidget() {
 void CpuInfoWidget::timer_update_cpu_hz() {
     this->cpu_info_handler->updateCpuHz();
     ui->label_cpu_hz->setText(this->cpu_info_handler->cpu_hz);
+}
+
+void CpuInfoWidget::timer_update_cpu_collect() {
+    this->cpu_info_handler->collectCpuInfo();
+    QString cpu_load_avg = QString::number(this->cpu_info_handler->cur_cpu.load_avg_1_5_15[0], 'f', 2) + " "
+                           + QString::number(this->cpu_info_handler->cur_cpu.load_avg_1_5_15[1], 'f', 2) + " "
+                           + QString::number(this->cpu_info_handler->cur_cpu.load_avg_1_5_15[2], 'f', 2);
+    ui->label_cpu_load_avg->setText(cpu_load_avg);
 }

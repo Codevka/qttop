@@ -26,6 +26,7 @@ public:
 
 public slots:
     void timer_update_cpu_hz(void);
+    void timer_update_cpu_collect(void);
 
 private:
     Ui::CpuInfoWidget *ui;
