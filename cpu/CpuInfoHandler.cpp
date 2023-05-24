@@ -55,8 +55,7 @@ QString CpuInfoHandler::getCpuHz() {
     if (failed > 4)
         return QString("");
 
-    QString freq_path
-        = "/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq";
+    QString freq_path = "/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq";
     QFile file(freq_path);
     QString cpuinfo_path = "/proc/cpuinfo";
     QFile   file2(cpuinfo_path);
@@ -73,8 +72,7 @@ QString CpuInfoHandler::getCpuHz() {
             auto prop_len = QString("cpu MHz\\t:").length();
             if (pos != -1) {
                 pos += prop_len;
-                cpu_hz_tmp
-                    = QString(tmp_str.mid(pos, tmp_str.length() - prop_len));
+                cpu_hz_tmp = QString(tmp_str.mid(pos, tmp_str.length() - prop_len));
             }
         } while (!ins.atEnd());
         hz = cpu_hz_tmp.toDouble();
