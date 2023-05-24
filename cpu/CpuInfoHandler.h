@@ -31,10 +31,10 @@ public:
     }
 
 public:
-    QString getCpuName();
-    QString getCpuHz();
-    void    updateCpuHz();
-    CpuInfo& collectCpuInfo();
+    QString  getCpuName();
+    QString  getCpuHz();
+    void     updateCpuHz();
+    CpuInfo &collectCpuInfo();
 
 public:
     QString          cpu_name;

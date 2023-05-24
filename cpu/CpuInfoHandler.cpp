@@ -9,6 +9,7 @@
 #include <string>
 
 CpuInfoHandler::CpuInfoHandler() {
+    this->cur_cpu.load_avg_1_5_15.resize(3);
     try {
         cpu_name = getCpuName();
     } catch (QString e) {
@@ -16,6 +17,7 @@ CpuInfoHandler::CpuInfoHandler() {
     }
 
     updateCpuHz();
+    collectCpuInfo();
 }
 
 QString CpuInfoHandler::getCpuName() {
@@ -88,14 +90,16 @@ QString CpuInfoHandler::getCpuHz() {
     return cpu_mhz;
 }
 
-CpuInfo& CpuInfoHandler::collectCpuInfo() {
-    std::string load_avg_path = "/proc/loadavg";
+CpuInfo &CpuInfoHandler::collectCpuInfo() {
+    std::string   load_avg_path = "/proc/loadavg";
     std::ifstream ifs;
     ifs.open(load_avg_path);
     if (ifs.good()) {
         ifs >> this->cur_cpu.load_avg_1_5_15[0] >> this->cur_cpu.load_avg_1_5_15[1] >> this->cur_cpu.load_avg_1_5_15[2];
     }
     ifs.close();
+    qDebug() << "[collectCpuInfo] " << this->cur_cpu.load_avg_1_5_15[0] << this->cur_cpu.load_avg_1_5_15[1]
+             << this->cur_cpu.load_avg_1_5_15[2];
 
     return this->cur_cpu;
 }
