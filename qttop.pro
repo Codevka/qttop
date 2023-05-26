@@ -1,5 +1,5 @@
 QT       += core gui
-
+QT       += charts
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -11,18 +11,17 @@ CONFIG += console
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
-    memwindow.cpp
+    mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h \
-    memwindow.h
+    mainwindow.h
 
 FORMS += \
-    mainwindow.ui \
-    memwindow.ui
+    mainwindow.ui
 
 include(cpu/cpu.pri)
+include(mem/mem.pri)
+include(graph/graph.pri)
 LIBS += -lpthread
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
