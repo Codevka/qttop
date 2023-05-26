@@ -128,7 +128,7 @@ void MemWindow::thread_mem()
                 ui->label_mem_buffers_name->setText("mem_buffers: "+QString::number(memInfo->mem_buffers));
                 ui->label_mem_cached_name->setText("mem_cached: "+QString::number(memInfo->mem_cached));
                 ui->label_mem_used_name->setText("mem_used: "+QString::number(memInfo->mem_used));
-                ui->graphicsView->handleTimeout((int)(memInfo->mem_used*100));
+                ui->graphicsView->handleTimeout((memInfo->mem_used*100));
         }
 
     //     sleep(3);
