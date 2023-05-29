@@ -196,17 +196,14 @@ void ChartView::tooltip(QPointF point, bool state)
 
 void ChartView::handleTimeout(int y)
 {
-    if (this->isVisible()) { //在可视的情况下刷新数据
-        // int y=qrand()%15-5;
-        QVector<QPointF> points = m_series->pointsVector();
-        points.append(QPointF(m_x, y));
+    QVector<QPointF> points = m_series->pointsVector();
+    points.append(QPointF(m_x, y));
 
-        if (points.size() > m_max) { //达到限值
-            points.pop_front();
-        }
-        m_series->replace(points);
-        m_chart->axisX()->setRange(m_x - (m_max - 1), m_x);
-
-        m_x++;
+    if (points.size() > m_max) { //达到限值
+        points.pop_front();
     }
+    m_series->replace(points);
+    m_chart->axisX()->setRange(m_x - (m_max - 1), m_x);
+
+    m_x++;
 }
