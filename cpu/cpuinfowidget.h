@@ -18,7 +18,7 @@ public:
     std::shared_ptr<CpuInfoHandler> cpu_info_handler;
 
     QTimer timer;
-    double time_rate = 0.5;
+    double time_rate = 1.0;
 
 public:
     explicit CpuInfoWidget(QWidget *parent = nullptr);

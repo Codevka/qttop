@@ -24,7 +24,13 @@
 using namespace std;
 
 ChartView::ChartView(QWidget *parent)
-    : QChartView(parent), m_tooltip(0), m_isTouching(false), m_isBuoyShow(true), m_x(0), m_max(40) {
+    : QChartView(parent)
+    , m_tooltip(0)
+    , m_isTouching(false)
+    , m_isBuoyShow(true)
+    , m_x(0)
+    , m_max(80)
+{
     m_series=new QLineSeries;
     m_chart=new QChart;
 
