@@ -139,10 +139,12 @@ CpuInfo &CpuInfoHandler::collectCpuInfo() {
         old_cpu_idle        = idle;
         qDebug() << "calc_total: " << calc_total;
 
-        cur_cpu.cpu_percent_total.push_back(
-            std::clamp((long long)round((double)(calc_total - calc_idle) * 100 / calc_total), 0ll, 100ll));
-        qDebug() << "cpu_percent_total: "
-                 << std::clamp((long long)round((double)(calc_total - calc_idle) * 100 / calc_total), 0ll, 100ll);
+        cur_cpu.cpu_percent = std::clamp((long long) round((double) (calc_total - calc_idle) * 100
+                                                           / calc_total),
+                                         0ll,
+                                         100ll);
+        cur_cpu.cpu_percent_total.push_back(cur_cpu.cpu_percent);
+        qDebug() << "cpu_percent_total: " << cur_cpu.cpu_percent;
 
         cur_cpu.cpu_percent_user.push_back(
             std::clamp((long long)round((double)(times[0] - old_cpu_user) * 100 / calc_total), 0ll, 100ll));

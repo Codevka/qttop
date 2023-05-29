@@ -4,6 +4,9 @@
 
 #include <QDebug>
 #include <QTimer>
+#include <QtCharts>
+
+QT_CHARTS_USE_NAMESPACE
 
 CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuInfoWidget) {
     ui->setupUi(this);
@@ -19,6 +22,7 @@ CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuI
     this->timer.start(1000 * time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_cpu_hz()));
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_cpu_collect()));
+    connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_cpu_graph()));
 }
 
 CpuInfoWidget::~CpuInfoWidget() {
@@ -36,4 +40,9 @@ void CpuInfoWidget::timer_update_cpu_collect() {
                            + QString::number(this->cpu_info_handler->cur_cpu.load_avg_1_5_15[1], 'f', 2) + " "
                            + QString::number(this->cpu_info_handler->cur_cpu.load_avg_1_5_15[2], 'f', 2);
     ui->label_cpu_load_avg->setText(cpu_load_avg);
+}
+
+void CpuInfoWidget::timer_update_cpu_graph()
+{
+    ui->cpu_graphicsView->handleTimeout(this->cpu_info_handler->cur_cpu.cpu_percent);
 }

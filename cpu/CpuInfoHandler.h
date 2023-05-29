@@ -18,6 +18,7 @@ typedef struct CpuInfo {
     QVector<QQueue<uint64_t>> core_percent;
     QVector<QQueue<uint64_t>> temperature;
     uint64_t                  max_temperature;
+    uint64_t cpu_percent;
     QVarLengthArray<float, 3> load_avg_1_5_15;
 } CpuInfo;
 
