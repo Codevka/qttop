@@ -16,9 +16,9 @@
   <widget class="QLabel" name="label_cpu_name">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>340</y>
-     <width>441</width>
+     <x>0</x>
+     <y>280</y>
+     <width>401</width>
      <height>31</height>
     </rect>
    </property>
@@ -37,15 +37,18 @@
     <bool>false</bool>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+   </property>
+   <property name="margin">
+    <number>0</number>
    </property>
   </widget>
   <widget class="QLabel" name="label_cpu_hz">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>390</y>
-     <width>441</width>
+     <x>380</x>
+     <y>280</y>
+     <width>171</width>
      <height>31</height>
     </rect>
    </property>
@@ -70,8 +73,8 @@
   <widget class="QLabel" name="label_cpu_load_avg">
    <property name="geometry">
     <rect>
-     <x>160</x>
-     <y>440</y>
+     <x>0</x>
+     <y>310</y>
      <width>441</width>
      <height>31</height>
     </rect>
@@ -91,17 +94,44 @@
     <bool>false</bool>
    </property>
    <property name="alignment">
-    <set>Qt::AlignCenter</set>
+    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
    </property>
   </widget>
   <widget class="ChartView" name="cpu_graphicsView">
    <property name="geometry">
     <rect>
-     <x>90</x>
-     <y>30</y>
-     <width>621</width>
+     <x>0</x>
+     <y>0</y>
+     <width>801</width>
      <height>271</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_cpu_percent">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>280</y>
+     <width>241</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="layoutDirection">
+    <enum>Qt::LeftToRight</enum>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
+   </property>
+   <property name="scaledContents">
+    <bool>false</bool>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
  </widget>

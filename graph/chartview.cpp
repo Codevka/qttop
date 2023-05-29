@@ -29,11 +29,10 @@ ChartView::ChartView(QWidget *parent)
     m_chart=new QChart;
 
     m_series=new QLineSeries;
-    // m_series->append(0,0);
+    m_series->append(-1, 0);
     m_series->setName("ss");
     m_chart->addSeries(m_series);
     m_chart->createDefaultAxes();
-
 
     m_axisX=new QValueAxis;
     m_axisX->setRange(0, m_max);
@@ -203,7 +202,7 @@ void ChartView::handleTimeout(int y)
         points.append(QPointF(m_x, y));
 
         if (points.size() > m_max) { //达到限值
-        points.pop_front();
+            points.pop_front();
         }
         m_series->replace(points);
         m_chart->axisX()->setRange(m_x - (m_max - 1), m_x);
