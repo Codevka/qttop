@@ -9,6 +9,7 @@
 #include <thread>
 #include <sys/types.h>
 #include <signal.h>
+#include "process.h"
 
 using std::max;
 using std::string;
@@ -21,7 +22,7 @@ namespace Shared
 
     fs::path procPath, passwd_path;
     long pageSize, clkTck, coreCount;
-    constexpr auto SSmax = std::numeric_limits<std::streamsize>::max();
+    long SSmax = std::numeric_limits<std::streamsize>::max();
 
     void init()
     {
@@ -61,18 +62,6 @@ namespace Shared
 
 namespace Proc
 {
-    struct ProcessInfo
-    {
-        string name{};
-        int pid{};
-        uint64_t cpu_t{};
-        double cpu_p{};
-        uint64_t memory{};
-        uint64_t wakeups{};
-        double power{};
-        uint64_t ticks{};
-    };
-
     vector<ProcessInfo> processes;
     uint64_t old_cputimes{};
     uint64_t ticks{};
@@ -217,26 +206,26 @@ namespace Proc
 
 }
 
-int main()
-{
-    Shared::init();
-    #if 0
-    printf("Cores:%ld, Pagesize:%ld\n", Shared::coreCount, Shared::pageSize);
-    for (;;)
-    {
-        auto processes = Proc::get_processes(1);
-        printf("-------------------------------------------------------------------\n");
-        printf("CPU Time: %lu\n", Proc::old_cputimes);
-        for (int i = 0; i < 5; i++)
-        {
-            const auto process = processes[i];
-            std::cout << "Name: " << process.name;
-            printf(", PID: %d, CPU Usage: %.1lf%%, CPU_T: %lu, Memory: %.1lfMB, Wakeups: %lu, Power Consumption: %.1lfmW\n",
-                   process.pid, process.cpu_p, process.cpu_t, process.memory * 1.0 / (1 << 20), process.wakeups, process.power);
-        }
-        printf("-------------------------------------------------------------------\n\n");
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-    #endif
-    Proc::send_signal(354018, 15);
-}
+//int main()
+//{
+//    Shared::init();
+//    #if 1
+//    printf("Cores:%ld, Pagesize:%ld\n", Shared::coreCount, Shared::pageSize);
+//    for (;;)
+//    {
+//        auto processes = Proc::get_processes(1);
+//        printf("-------------------------------------------------------------------\n");
+//        printf("CPU Time: %lu\n", Proc::old_cputimes);
+//        for (int i = 0; i < 5; i++)
+//        {
+//            const auto process = processes[i];
+//            std::cout << "Name: " << process.name;
+//            printf(", PID: %d, CPU Usage: %.1lf%%, CPU_T: %lu, Memory: %.1lfMB, Wakeups: %lu, Power Consumption: %.1lfmW\n",
+//                   process.pid, process.cpu_p, process.cpu_t, process.memory * 1.0 / (1 << 20), process.wakeups, process.power);
+//        }
+//        printf("-------------------------------------------------------------------\n\n");
+//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//    }
+//    #endif
+//    // Proc::send_signal(354018, 15);
+//}
