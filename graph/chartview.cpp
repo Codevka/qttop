@@ -23,26 +23,25 @@
 #include <sys/time.h>
 using namespace std;
 
-ChartView::ChartView(QWidget *parent) :
-    QChartView(parent),
-    m_tooltip(0),
-    m_isTouching(false),
-    m_isBuoyShow(true),
-    m_x(0),
-    m_max(20)
+ChartView::ChartView(QWidget *parent)
+    : QChartView(parent)
+    , m_tooltip(0)
+    , m_isTouching(false)
+    , m_isBuoyShow(true)
+    , m_x(0)
+    , m_max(80)
 {
     m_series=new QLineSeries;
     m_chart=new QChart;
 
     m_series=new QLineSeries;
-    m_series->append(0,0);
+    m_series->append(-1, 0);
     m_series->setName("ss");
     m_chart->addSeries(m_series);
     m_chart->createDefaultAxes();
 
-
     m_axisX=new QValueAxis;
-    m_axisX->setRange(0,20);
+    m_axisX->setRange(0, m_max);
     m_axisX->setLineVisible(false);
     m_axisX->setTickCount(11);     //标记的个数
     m_axisX->setMinorTickCount(5); //次标记的个数
@@ -62,7 +61,7 @@ ChartView::ChartView(QWidget *parent) :
 
     this->setChart(m_chart);
     this->setRenderHint(QPainter::Antialiasing);
-    this->setRubberBand(QChartView::RectangleRubberBand);
+    // this->setRubberBand(QChartView::RectangleRubberBand);
 
     // m_timer.setInterval(1000);
     // m_timer.start();
@@ -74,7 +73,6 @@ ChartView::ChartView(QWidget *parent) :
     connect(m_series, SIGNAL(hovered(QPointF, bool)), this, SLOT(tooltip(QPointF,bool)));
 
     this->setMouseTracking(true);
-
 }
 
 qreal ChartView::getYValue(QPointF p1, QPointF p2, qreal x)
@@ -204,22 +202,14 @@ void ChartView::tooltip(QPointF point, bool state)
 
 void ChartView::handleTimeout(int y)
 {
-    if(this->isVisible())
-    {//在可视的情况下刷新数据
-        // int y=qrand()%15-5;
-        QVector<QPointF> points=m_series->pointsVector();
-        points.append(QPointF(m_x,y));
+    QVector<QPointF> points = m_series->pointsVector();
+    points.append(QPointF(m_x, y));
 
-        if(points.size()>m_max){//达到限值
-            points.pop_front();
-        }
-        m_series->replace(points);
-
-        if(m_x>20)
-        {
-            m_chart->axisX()->setRange(m_x-19,m_x);
-        }
-
-        m_x++;
+    if (points.size() > m_max) { //达到限值
+        points.pop_front();
     }
+    m_series->replace(points);
+    m_chart->axisX()->setRange(m_x - (m_max - 1), m_x);
+
+    m_x++;
 }
