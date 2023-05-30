@@ -74,7 +74,7 @@ QString CpuInfoHandler::getCpuHz() {
         return QString("");
 
     QString freq_path = "/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq";
-    QFile file(freq_path);
+    QFile   file(freq_path);
     QString cpuinfo_path = "/proc/cpuinfo";
     QFile   file2(cpuinfo_path);
     if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -108,8 +108,8 @@ QString CpuInfoHandler::getCpuHz() {
 
 CpuInfo &CpuInfoHandler::collectCpuInfo() {
     constexpr auto SSmax         = std::numeric_limits<std::streamsize>::max();
-    std::string   load_avg_path = "/proc/loadavg";
-    std::ifstream ifs;
+    std::string    load_avg_path = "/proc/loadavg";
+    std::ifstream  ifs;
 
     ifs.open(load_avg_path);
     if (ifs.good()) {
@@ -139,10 +139,8 @@ CpuInfo &CpuInfoHandler::collectCpuInfo() {
         old_cpu_idle        = idle;
         qDebug() << "calc_total: " << calc_total;
 
-        cur_cpu.cpu_percent = std::clamp((long long) round((double) (calc_total - calc_idle) * 1000
-                                                           / calc_total),
-                                         0ll,
-                                         1000ll);
+        cur_cpu.cpu_percent
+            = std::clamp((long long)round((double)(calc_total - calc_idle) * 1000 / calc_total), 0ll, 1000ll);
         cur_cpu.cpu_percent_total.push_back(cur_cpu.cpu_percent);
         qDebug() << "cpu_percent_total: " << cur_cpu.cpu_percent;
 

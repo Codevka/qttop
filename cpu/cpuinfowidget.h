@@ -10,8 +10,7 @@ namespace Ui {
     class CpuInfoWidget;
 }
 
-class CpuInfoWidget : public QWidget
-{
+class CpuInfoWidget : public QWidget {
     Q_OBJECT
 
 public:
