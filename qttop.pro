@@ -22,6 +22,7 @@ FORMS += \
 include(cpu/cpu.pri)
 include(mem/mem.pri)
 include(graph/graph.pri)
+include(proc/proc.pri)
 LIBS += -lpthread
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

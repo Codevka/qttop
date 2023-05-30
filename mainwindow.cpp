@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "cpu/cpuinfowidget.h"
 #include "mem/memwindow.h"
+#include "proc/procwidget.h"
 #include "ui_mainwindow.h"
 
 #include <QTabBar>
@@ -23,6 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
     auto memWindow = new MemWindow;
     memLayout->addWidget(memWindow);
     ui->memory_tab->setLayout(memLayout);
+
+    auto procLayout     = new QVBoxLayout;
+    auto proc_widget = new procwidget;
+    procLayout->addWidget(proc_widget);
+    ui->process_tab->setLayout(procLayout);
 }
 
 MainWindow::~MainWindow()
