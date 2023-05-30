@@ -2,6 +2,10 @@
 #include "ui_procwidget.h"
 #include "process.h"
 #include <QStandardItemModel>
+#include <QMenu>
+#include <QAction>
+#include <iostream>
+#include <signal.h>
 
 
 procwidget::procwidget(QWidget *parent) :
@@ -14,10 +18,12 @@ procwidget::procwidget(QWidget *parent) :
     model->setColumnCount(5);
 
     QStringList headers;
-    headers << "PID" << "name" << "CPU" << "mem" << "power";
+    headers << "PID" << "进程名" << "CPU占用率" << "内存" << "功耗";
     model->setHorizontalHeaderLabels(headers);
 
     Shared::init();
+
+    timer_update_proc();
 
     ui->tableView->setModel(model);
 
@@ -31,7 +37,7 @@ procwidget::~procwidget()
 }
 
 void procwidget::timer_update_proc() {
-    auto processes = Proc::get_processes(time_rate);
+    processes = Proc::get_processes(time_rate);
     for (size_t i = 0; i < processes.size(); i++)
     {
         const auto process = processes[i];
@@ -43,5 +49,28 @@ void procwidget::timer_update_proc() {
         model->setItem(i, 2, new QStandardItem(cpu));
         model->setItem(i, 3, new QStandardItem(mem));
         model->setItem(i, 4, new QStandardItem(power));
+    }
+}
+
+void procwidget::on_tableView_customContextMenuRequested(const QPoint &pos)
+{
+    QModelIndex index = ui->tableView->indexAt(pos);
+    if (index.isValid()) {
+        int pid = processes[index.row()].pid;
+        std::cout << pid << '\n';
+        QMenu menu;
+        QAction *stopProc = menu.addAction("挂起进程");
+        QAction *termProc = menu.addAction("结束进程");
+        QAction *killProc = menu.addAction("强制退出");
+        connect(stopProc, &QAction::triggered, [=](){
+            Proc::send_signal(pid, SIGSTOP);
+        });
+        connect(termProc, &QAction::triggered, [=](){
+            Proc::send_signal(pid, SIGTERM);
+        });
+        connect(killProc, &QAction::triggered, [=](){
+            Proc::send_signal(pid, SIGKILL);
+        });
+        menu.exec(QCursor::pos());
     }
 }
