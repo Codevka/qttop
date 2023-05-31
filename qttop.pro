@@ -11,19 +11,19 @@ CONFIG += console
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
-    memwindow.cpp
+    mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h \
-    memwindow.h
+    mainwindow.h
 
 FORMS += \
-    mainwindow.ui \
-    memwindow.ui
+    mainwindow.ui
 
 include(cpu/cpu.pri)
 include(network/network.pri)
+include(mem/mem.pri)
+include(graph/graph.pri)
+include(proc/proc.pri)
 LIBS += -lpthread
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
