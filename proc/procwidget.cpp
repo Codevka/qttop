@@ -26,6 +26,7 @@ procwidget::procwidget(QWidget *parent) :
     timer_update_proc();
 
     ui->tableView->setModel(model);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     this->timer.start(1000 * time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_proc()));
