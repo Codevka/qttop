@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "cpu/cpuinfowidget.h"
 #include "ui_mainwindow.h"
+#include "network/netwidget.h"
 
 #include <QTabBar>
 #include <QVBoxLayout>
@@ -16,7 +17,13 @@ MainWindow::MainWindow(QWidget *parent)
     auto cpuLayout     = new QVBoxLayout;
     auto cpuInfoWidget = new CpuInfoWidget;
     cpuLayout->addWidget(cpuInfoWidget);
+
+    auto networklayout = new QVBoxLayout;
+    auto networkwidget = new netwidget;
+    networklayout->addWidget(networkwidget);
+
     ui->cpu_tab->setLayout(cpuLayout);
+    ui->network_tab->setLayout(networklayout);
 }
 
 MainWindow::~MainWindow()
