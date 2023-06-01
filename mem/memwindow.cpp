@@ -126,7 +126,7 @@ void MemWindow::thread_mem()
                 ui->label_mem_free_name->setText("空闲内存: "+QString::number(memInfo->mem_free)+"kb" );
                 ui->label_mem_total_name->setText("内存总量: "+QString::number(memInfo->mem_total)+"kb" );
                 ui->label_mem_buffers_name->setText("块设备占用内存: "+QString::number(memInfo->mem_buffers)+"kb" );
-                ui->label_mem_cached_name->setText("文件页: "+QString::number(memInfo->mem_cached));
+                ui->label_mem_cached_name->setText("文件页: "+QString::number(memInfo->mem_cached)+"kb" );
                 ui->label_mem_used_name->setText("内存使用量: "+QString::number(memInfo->mem_used*100)+"%" );
                 ui->graphicsView->handleTimeout((memInfo->mem_used*100));
         }

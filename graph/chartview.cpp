@@ -190,7 +190,7 @@ void ChartView::tooltip(QPointF point, bool state)
         m_tooltip = new Callout(m_chart);
 
     if (state) {
-        m_tooltip->setText(QString("X: %1 \nY: %2 ").arg(point.x()).arg(point.y()));
+        m_tooltip->setText(QString("时刻: %1s \n使用情况: %2% ").arg((int)point.x()).arg(point.y()));
         m_tooltip->setAnchor(point);
         m_tooltip->setZValue(11);
         m_tooltip->updateGeometry();
