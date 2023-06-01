@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>360</y>
+     <y>320</y>
      <width>441</width>
      <height>31</height>
     </rect>
@@ -44,7 +44,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>410</y>
+     <y>360</y>
      <width>441</width>
      <height>31</height>
     </rect>
@@ -71,7 +71,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>450</y>
+     <y>400</y>
      <width>441</width>
      <height>31</height>
     </rect>
@@ -97,9 +97,9 @@
   <widget class="ChartView" name="graphicsView">
    <property name="geometry">
     <rect>
-     <x>300</x>
+     <x>100</x>
      <y>10</y>
-     <width>331</width>
+     <width>641</width>
      <height>291</height>
     </rect>
    </property>
@@ -108,7 +108,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>490</y>
+     <y>440</y>
      <width>441</width>
      <height>31</height>
     </rect>
@@ -135,7 +135,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>520</y>
+     <y>480</y>
      <width>441</width>
      <height>31</height>
     </rect>

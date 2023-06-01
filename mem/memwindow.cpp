@@ -116,18 +116,18 @@ void MemWindow::thread_mem()
                 memInfo->mem_useds[memInfo->maxLength-1] = memInfo->mem_used;
             // }
                 // MemWindow::showChart(memInfo->nowLength, (int)memInfo->mem_used);
-                cout << "mem_free: " << memInfo->mem_free << "\n" << endl;
-                cout << "mem_total: " << memInfo->mem_total << "\n" << endl;
-                cout << "mem_buffers: " << memInfo->mem_buffers << "\n" << endl;
-                cout << "mem_cached: " << memInfo->mem_cached << "\n" << endl;
-                cout << "mem_used: " << memInfo->mem_used << "\n" << endl;
+                cout << "空闲内存量: " << memInfo->mem_free << "kb\n" << endl;
+                cout << "内存总量: " << memInfo->mem_total << "kb\n" << endl;
+                cout << "块设备占用内存: " << memInfo->mem_buffers << "kb\n" << endl;
+                cout << "文件页: " << memInfo->mem_cached << "\n" << endl;
+                cout << "内存使用量: " << memInfo->mem_used << "kb\n" << endl;
                 MemWindow::print_array(memInfo->mem_useds, memInfo->maxLength);
                 cout << "\n" << endl;
-                ui->label_mem_free_name->setText("mem_free: "+QString::number(memInfo->mem_free));
-                ui->label_mem_total_name->setText("mem_total: "+QString::number(memInfo->mem_total));
-                ui->label_mem_buffers_name->setText("mem_buffers: "+QString::number(memInfo->mem_buffers));
-                ui->label_mem_cached_name->setText("mem_cached: "+QString::number(memInfo->mem_cached));
-                ui->label_mem_used_name->setText("mem_used: "+QString::number(memInfo->mem_used));
+                ui->label_mem_free_name->setText("空闲内存: "+QString::number(memInfo->mem_free)+"kb" );
+                ui->label_mem_total_name->setText("内存总量: "+QString::number(memInfo->mem_total)+"kb" );
+                ui->label_mem_buffers_name->setText("块设备占用内存: "+QString::number(memInfo->mem_buffers)+"kb" );
+                ui->label_mem_cached_name->setText("文件页: "+QString::number(memInfo->mem_cached));
+                ui->label_mem_used_name->setText("内存使用量: "+QString::number(memInfo->mem_used*100)+"%" );
                 ui->graphicsView->handleTimeout((memInfo->mem_used*100));
         }
 
