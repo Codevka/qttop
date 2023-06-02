@@ -9,6 +9,18 @@
 
 QT_CHARTS_USE_NAMESPACE
 
+QString get_core_color(double val)
+{
+    // color inspired by Vuetify
+    if (val <= 50) {
+        return QString("QLabel { color: #009688; }");
+    } else if (val <= 80) {
+        return QString("QLabel { color: #FFA000; }");
+    } else {
+        return QString("QLabel { color: #C62828; }");
+    }
+}
+
 CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuInfoWidget) {
     ui->setupUi(this);
     this->cpu_info_handler = CpuInfoHandler::getInstance();
@@ -31,13 +43,26 @@ CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuI
     ui->core_frame->setLayout(core_grid_layout);
     this->labels = QVector<QLabel *>();
     for (uint32_t i = 0; i < this->cpu_info_handler->core_num; i++) {
-        QLabel *label = new QLabel(this);
-        this->labels.push_back(label);
-        label->setText(QString("CPU%1: %2\%")
-                           .arg(i)
-                           .arg(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
-        // label->setAlignment(Qt::AlignCenter);
-        core_grid_layout->addWidget(label, i / 4, i % 4);
+        QLabel *label_name = new QLabel(this);
+        QLabel *label_value = new QLabel(this);
+        this->labels.push_back(label_name);
+        this->labels.push_back(label_value);
+        label_name->setText(QString("CPU%1: ").arg(i));
+        label_value->setText(
+            QString("%2\%").arg(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
+
+        core_grid_layout->addWidget(label_name, i / 4, (i % 4) * 4);
+        core_grid_layout->addWidget(label_value, i / 4, (i % 4) * 4 + 1);
+
+        if (this->cpu_info_handler->core_num >= 4) {
+            QLabel *empty_label = new QLabel(this);
+            core_grid_layout->addWidget(empty_label, i / 4, (i % 4) * 4 + 2);
+            core_grid_layout->addWidget(empty_label, i / 4, (i % 4) * 4 + 3);
+        }
+
+        label_name->setStyleSheet("QLabel { color: dimgrey; }");
+        label_value->setStyleSheet(
+            get_core_color(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
     }
 
     this->timer.start(1000 * time_rate);
@@ -75,7 +100,10 @@ void CpuInfoWidget::timer_update_cpu_graph() {
 
 void CpuInfoWidget::timer_update_core_percent() {
     for (uint32_t i = 0; i < this->cpu_info_handler->core_num; i++) {
-        this->labels[i]->setText(
-            QString("CPU%1: %2\%").arg(i).arg(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
+        this->labels[i * 2]->setText(QString("CPU%1: ").arg(i));
+        this->labels[i * 2 + 1]->setText(
+            QString("%2\%").arg(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
+        this->labels[i * 2 + 1]->setStyleSheet(
+            get_core_color(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
     }
 }
