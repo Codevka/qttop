@@ -89,6 +89,33 @@ void MemWindow::print_array(float arr[],int n)
     }
 }
 
+enum Unit { USE_KB, USE_MB, USE_GB };
+
+QString gen_mem_str(int num)
+{
+    Unit u = USE_KB;
+    int val1 = num, val2 = 0;
+    if (num >= 1024 * 1024) {
+        u = USE_GB;
+        val1 = num / (1024 * 1024);
+        val2 = (num * 10 / (1024 * 1024)) % 10;
+    } else if (num >= 1024) {
+        u = USE_MB;
+        val1 = num / 1024;
+        val2 = (num * 10 / 1024) % 10;
+    }
+    switch (u) {
+    case USE_KB:
+        return QString("%1.%2 KB").arg(val1).arg(val2);
+    case USE_MB:
+        return QString("%1.%2 MB").arg(val1).arg(val2);
+    case USE_GB:
+        return QString("%1.%2 GB").arg(val1).arg(val2);
+    default:
+        return QString("Error");
+    }
+}
+
 void MemWindow::thread_mem()
 {
     // mem *memInfo = reinterpret_cast<mem *>(arg);
@@ -123,11 +150,12 @@ void MemWindow::thread_mem()
                 cout << "内存使用量: " << memInfo->mem_used << "kb\n" << endl;
                 MemWindow::print_array(memInfo->mem_useds, memInfo->maxLength);
                 cout << "\n" << endl;
-                ui->label_mem_free_name->setText("空闲内存: "+QString::number(memInfo->mem_free)+"kb" );
-                ui->label_mem_total_name->setText("内存总量: "+QString::number(memInfo->mem_total)+"kb" );
-                ui->label_mem_buffers_name->setText("块设备占用内存: "+QString::number(memInfo->mem_buffers)+"kb" );
-                ui->label_mem_cached_name->setText("文件页: "+QString::number(memInfo->mem_cached)+"kb" );
-                ui->label_mem_used_name->setText("内存使用量: "+QString::number(memInfo->mem_used*100)+"%" );
+                ui->label_mem_free_name->setText(gen_mem_str(memInfo->mem_free));
+                ui->label_mem_total_name->setText(gen_mem_str(memInfo->mem_total));
+                ui->label_mem_buffers_name->setText(gen_mem_str(memInfo->mem_buffers));
+                ui->label_mem_cached_name->setText(gen_mem_str(memInfo->mem_cached));
+                ui->label_mem_used_name->setText(QString::number(memInfo->mem_used * 100, 'f', 1)
+                                                 + "%");
                 ui->graphicsView->handleTimeout((memInfo->mem_used*100));
         }
 

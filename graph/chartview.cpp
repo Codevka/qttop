@@ -33,6 +33,7 @@ ChartView::ChartView(QWidget *parent)
 {
     m_series=new QLineSeries;
     m_chart=new QChart;
+    m_chart->setBackgroundVisible(false);
 
     m_series=new QLineSeries;
     m_series->append(-1, 0);

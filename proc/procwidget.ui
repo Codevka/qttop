@@ -31,6 +31,10 @@
      <property name="contextMenuPolicy">
       <enum>Qt::CustomContextMenu</enum>
      </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(243, 243, 243);
+border-radius: 8px;</string>
+     </property>
      <property name="showGrid">
       <bool>true</bool>
      </property>
