@@ -13,6 +13,8 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#include <Qt>
+
 using std::max;
 using std::string;
 using std::vector;
@@ -47,7 +49,7 @@ namespace Proc
     extern uint64_t old_cputimes;
     extern uint64_t ticks;
 
-    vector<ProcessInfo> get_processes(int64_t duration);
+    vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder order);
     int send_signal(int pid, int sig);
 }
 

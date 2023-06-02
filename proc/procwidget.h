@@ -24,6 +24,7 @@ public slots:
 
 private slots:
     void on_tableView_customContextMenuRequested(const QPoint &pos);
+    void sort_by_column(int, Qt::SortOrder);
 
 private:
     Ui::procwidget *ui;
@@ -31,6 +32,8 @@ private:
 
     QTimer timer;
     double time_rate = 3;
+    int           column;
+    Qt::SortOrder order;
 
     std::vector<Proc::ProcessInfo> processes;
 };

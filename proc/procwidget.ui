@@ -39,7 +39,7 @@ border-radius: 8px;</string>
       <bool>true</bool>
      </property>
      <property name="sortingEnabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <attribute name="horizontalHeaderCascadingSectionResizes">
       <bool>false</bool>

@@ -1,18 +1,18 @@
 #include "procwidget.h"
-#include "ui_procwidget.h"
 #include "process.h"
-#include <QStandardItemModel>
-#include <QMenu>
+#include "ui_procwidget.h"
 #include <QAction>
+#include <QDebug>
+#include <QMenu>
+#include <QStandardItemModel>
 #include <iostream>
 #include <signal.h>
 
-
-procwidget::procwidget(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::procwidget)
-{
+procwidget::procwidget(QWidget *parent) : QWidget(parent), ui(new Ui::procwidget) {
     ui->setupUi(this);
+
+    column = 2;
+    order  = Qt::DescendingOrder;
 
     model = new QStandardItemModel(this);
     model->setColumnCount(5);
@@ -30,6 +30,10 @@ procwidget::procwidget(QWidget *parent) :
 
     this->timer.start(1000 * time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_proc()));
+    connect(ui->tableView->horizontalHeader(),
+            SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)),
+            this,
+            SLOT(sort_by_column(int, Qt::SortOrder)));
 }
 
 procwidget::~procwidget()
@@ -37,8 +41,16 @@ procwidget::~procwidget()
     delete ui;
 }
 
+void procwidget::sort_by_column(int column, Qt::SortOrder order) {
+    this->column = column;
+    this->order  = order;
+    qDebug() << "Sort Event: " << column << order;
+    // force update
+    timer_update_proc();
+}
+
 void procwidget::timer_update_proc() {
-    processes = Proc::get_processes(time_rate);
+    processes = Proc::get_processes(time_rate, column, order);
     for (size_t i = 0; i < processes.size(); i++)
     {
         const auto process = processes[i];

@@ -62,12 +62,40 @@ namespace Shared
 
 namespace Proc
 {
+    std::function<bool(const ProcessInfo &, const ProcessInfo &)> sort_function(int column, Qt::SortOrder order) {
+        auto pid_ascend_func      = [](const ProcessInfo &a, const ProcessInfo &b) { return a.pid > b.pid; };
+        auto pid_descend_func     = [](const ProcessInfo &a, const ProcessInfo &b) { return a.pid < b.pid; };
+        auto name_ascend_func     = [](const ProcessInfo &a, const ProcessInfo &b) { return a.name > b.name; };
+        auto name_descend_func    = [](const ProcessInfo &a, const ProcessInfo &b) { return a.name < b.name; };
+        auto percent_ascend_func  = [](const ProcessInfo &a, const ProcessInfo &b) { return a.cpu_p > b.cpu_p; };
+        auto percent_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) { return a.cpu_p < b.cpu_p; };
+        auto memory_ascend_func   = [](const ProcessInfo &a, const ProcessInfo &b) { return a.memory > b.memory; };
+        auto memory_descend_func  = [](const ProcessInfo &a, const ProcessInfo &b) { return a.memory < b.memory; };
+        auto power_ascend_func    = [](const ProcessInfo &a, const ProcessInfo &b) { return a.power > b.power; };
+        auto power_descend_func   = [](const ProcessInfo &a, const ProcessInfo &b) { return a.power < b.power; };
+        auto default_func         = percent_descend_func;
+
+        switch (column) {
+            case 0:
+                return order == Qt::AscendingOrder ? pid_ascend_func : pid_descend_func;
+            case 1:
+                return order == Qt::AscendingOrder ? name_ascend_func : name_descend_func;
+            case 2:
+                return order == Qt::AscendingOrder ? percent_ascend_func : percent_descend_func;
+            case 3:
+                return order == Qt::AscendingOrder ? memory_ascend_func : memory_descend_func;
+            case 4:
+                return order == Qt::AscendingOrder ? power_ascend_func : power_descend_func;
+            default:
+                return default_func;
+        }
+    }
+
     vector<ProcessInfo> processes;
     uint64_t old_cputimes{};
     uint64_t ticks{};
 
-    vector<ProcessInfo> get_processes(int64_t duration)
-    {
+    vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder order) {
         // Get the total CPU time
         std::ifstream stat_file("/proc/stat");
         uint64_t cpu_times = 0;
@@ -192,9 +220,8 @@ namespace Proc
                                        { return proc.ticks < ticks; }),
                         processes.end());
 
-        // Sort the processes by CPU usage
-        std::sort(processes.begin(), processes.end(), [](const ProcessInfo &a, const ProcessInfo &b)
-                  { return a.cpu_p > b.cpu_p; });
+        // Sort the processes
+        std::sort(processes.begin(), processes.end(), sort_function(column, order));
 
         return processes;
     }
