@@ -36,6 +36,7 @@ namespace Proc
     struct ProcessInfo
     {
         string name{};
+        string name_lower{};
         int pid{};
         uint64_t cpu_t{};
         double cpu_p{};

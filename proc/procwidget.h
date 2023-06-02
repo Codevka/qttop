@@ -31,7 +31,7 @@ private:
     QStandardItemModel *model;
 
     QTimer timer;
-    double time_rate = 3;
+    double time_rate = 2;
     int           column;
     Qt::SortOrder order;
 

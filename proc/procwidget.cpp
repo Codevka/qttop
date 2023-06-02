@@ -49,10 +49,12 @@ void procwidget::sort_by_column(int column, Qt::SortOrder order) {
     timer_update_proc();
 }
 
-void procwidget::timer_update_proc() {
+void procwidget::timer_update_proc()
+{
     processes = Proc::get_processes(time_rate, column, order);
-    for (size_t i = 0; i < processes.size(); i++)
-    {
+    int row_cnt = model->rowCount();
+    int length = processes.size();
+    for (size_t i = 0; i < length; i++) {
         const auto process = processes[i];
         QString cpu; cpu.sprintf("%.1lf%%", process.cpu_p);
         QString mem; mem.sprintf("%.1lfMB", process.memory * 1.0 / (1 << 20));
@@ -62,6 +64,9 @@ void procwidget::timer_update_proc() {
         model->setItem(i, 2, new QStandardItem(cpu));
         model->setItem(i, 3, new QStandardItem(mem));
         model->setItem(i, 4, new QStandardItem(power));
+    }
+    for (size_t i = length; i < row_cnt; i++) {
+        model->removeRow(i);
     }
 }
 
