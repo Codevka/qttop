@@ -26,13 +26,15 @@ CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuI
     }
 
     // Grid layout for each core
+    auto core_grid_layout = new QGridLayout;
+    ui->core_frame->setLayout(core_grid_layout);
     this->labels = QVector<QLabel *>();
     for (uint32_t i = 0; i < this->cpu_info_handler->core_num; i++) {
         QLabel *label = new QLabel(this);
         this->labels.push_back(label);
         label->setText(QString("CPU%1: %2\%").arg(i).arg(this->cpu_info_handler->cur_cpu.core_percent[i].last()));
         label->setAlignment(Qt::AlignCenter);
-        ui->gridLayout->addWidget(label, i / 4, i % 4);
+        core_grid_layout->addWidget(label, i / 4, i % 4);
     }
 
     this->timer.start(1000 * time_rate);
