@@ -16,13 +16,14 @@ public:
     explicit netwidget(QWidget *parent = nullptr);
     ~netwidget();
     QTimer timer;
-    double time_rate = 1.5;
-    double last_recvbytes=0;
-    double last_sendbytes=0;
+    double time_rate = 1.0;
+    double last_recvbytes=999999999999;
+    double last_sendbytes=999999999999;
+    netinfo ni;
 public slots:
     void update_network(void);
 private slots:
-    void on_comboBox_currentTextChanged(QString ni);
+    void on_comboBox_currentTextChanged();
 
 private:
     Ui::netwidget *ui;

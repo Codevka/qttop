@@ -1,4 +1,4 @@
-#include "chartview.h"
+    #include "chartview.h"
 #include<QDebug>
 #include<QGraphicsView>
 #include <QLegendMarker>
