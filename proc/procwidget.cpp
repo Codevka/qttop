@@ -12,7 +12,7 @@ procwidget::procwidget(QWidget *parent) : QWidget(parent), ui(new Ui::procwidget
     ui->setupUi(this);
 
     column = 2;
-    order = Qt::DescendingOrder;
+    order = Qt::AscendingOrder;
 
     model = new QStandardItemModel(this);
     model->setColumnCount(5);
@@ -35,7 +35,7 @@ procwidget::procwidget(QWidget *parent) : QWidget(parent), ui(new Ui::procwidget
             this,
             SLOT(sort_by_column(int, Qt::SortOrder)));
 
-    ui->tableView->sortByColumn(2, Qt::DescendingOrder);
+    ui->tableView->sortByColumn(column, order);
     ui->tableView->horizontalHeader()->setSortIndicatorShown(false);
 }
 

@@ -15,6 +15,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     ui->tabWidget->tabBar()->setDocumentMode(true);
     ui->tabWidget->tabBar()->setExpanding(true);
+    ui->tabWidget->setStyleSheet("QTabWidget#tabwidget { background-color: rgb(243, 243, 243); } \
+                                  QTabWidget::tar-bar { alignment: center; } \
+                                  QTabWidget::pane { border: none; } \
+                                  QTabBar::tab { background-color: rgb(243, 243, 243); padding: 8px; } \
+                                  QTabBar::tab:first { border-top-left-radius: 8px; border-bottom-left-radius: 8px; } \
+                                  QTabBar::tab:last { border-top-right-radius: 8px; border-bottom-right-radius: 8px; } \
+                                  QTabBar::tab:selected { background-color: #039BE5; color: white; } \
+                                  QTabBar::tab:hover:!selected { background-color: #4FC3F7; color: #FAFAFA; } \
+                                 ");
 
     auto cpuLayout     = new QVBoxLayout;
     auto cpuInfoWidget = new CpuInfoWidget;

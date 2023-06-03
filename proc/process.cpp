@@ -79,31 +79,31 @@ std::string lower_string(const std::string &str)
 std::function<bool(const ProcessInfo &, const ProcessInfo &)> sort_function(int column,
                                                                             Qt::SortOrder order)
 {
-    auto pid_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) { return a.pid < b.pid; };
-    auto pid_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) { return a.pid > b.pid; };
+    auto pid_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) { return a.pid > b.pid; };
+    auto pid_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) { return a.pid < b.pid; };
     auto name_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
-        return a.name_lower < b.name_lower;
-    };
-    auto name_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
         return a.name_lower > b.name_lower;
     };
-    auto percent_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
-        return a.cpu_p < b.cpu_p;
+    auto name_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
+        return a.name_lower < b.name_lower;
     };
-    auto percent_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
+    auto percent_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
         return a.cpu_p > b.cpu_p;
     };
-    auto memory_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
-        return a.memory < b.memory;
+    auto percent_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
+        return a.cpu_p < b.cpu_p;
     };
-    auto memory_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
+    auto memory_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
         return a.memory > b.memory;
     };
+    auto memory_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
+        return a.memory < b.memory;
+    };
     auto power_ascend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
-        return a.power < b.power;
+        return a.power > b.power;
     };
     auto power_descend_func = [](const ProcessInfo &a, const ProcessInfo &b) {
-        return a.power > b.power;
+        return a.power < b.power;
     };
     auto default_func = percent_descend_func;
 
