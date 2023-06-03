@@ -26,7 +26,7 @@ long SSmax = std::numeric_limits<std::streamsize>::max();
 
 void init()
 {
-    //? Shared global variables init
+    // 初始化系统全局参数
     procPath = (fs::is_directory(fs::path("/proc")) and access("/proc", R_OK) != -1) ? "/proc" : "";
     if (procPath.empty())
         throw std::runtime_error("Proc filesystem not found or no permission to read from it!");
@@ -60,7 +60,7 @@ void init()
     }
 }
 
-} // namespace Shared
+}
 
 namespace Proc {
 std::string lower_string(const std::string &str)
@@ -129,7 +129,7 @@ uint64_t ticks{};
 
 vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder order)
 {
-    // Get the total CPU time
+    // 获取CPU时间
     std::ifstream stat_file("/proc/stat");
     uint64_t cpu_times = 0;
     if (stat_file.good()) {
@@ -152,7 +152,7 @@ vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder or
             continue;
         }
 
-        //? Check if pid already exists in current_procs
+        // 检查该进程是否已经存在
         auto find_old = std::find_if(processes.begin(),
                                      processes.end(),
                                      [&](const ProcessInfo &proc) { return proc.pid == pid; });
@@ -165,7 +165,7 @@ vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder or
 
         auto &proc = *find_old;
 
-        // Get the process name
+        // 获取进程名
         if (no_cache) {
             std::ifstream comm_file(entry.path() / "comm");
             std::getline(comm_file, proc.name);
@@ -173,7 +173,7 @@ vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder or
             comm_file.close();
         }
 
-        // Get the process CPU time
+        // 获取进程的CPU时间
         std::ifstream stat_file(entry.path() / "stat");
         string stat_line;
         std::getline(stat_file, stat_line);
@@ -193,14 +193,14 @@ vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder or
             start_pos = end_pos + 1;
         }
 
-        // 获取内存
+        // 获取进程占用的内存
         std::ifstream statm_file(entry.path() / "statm");
         statm_file.ignore(Shared::SSmax, ' ');
         statm_file >> proc.memory;
         statm_file.close();
         proc.memory *= Shared::pageSize;
 
-        //? Process cpu usage since last update
+        // 计算进程的CPU使用率
         proc.cpu_p = std::clamp(100.0 * (cpu_t - proc.cpu_t)
                                     / max((uint64_t) 1, cpu_times - old_cputimes),
                                 0.0,
@@ -227,7 +227,7 @@ vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder or
 
         proc.power = (3.95 * (wakeups - proc.wakeups) + 15.0 * (cpu_t - proc.cpu_t)) / duration;
 
-        //? Update cached value with latest cpu times
+        // 更新进程信息
         proc.cpu_t = cpu_t;
         proc.wakeups = wakeups;
         proc.ticks++;
@@ -242,7 +242,7 @@ vector<ProcessInfo> get_processes(int64_t duration, int column, Qt::SortOrder or
                                    [](const ProcessInfo &proc) { return proc.ticks < ticks; }),
                     processes.end());
 
-    // Sort the processes
+    // 进程按照指定的列排序
     std::sort(processes.begin(), processes.end(), sort_function(column, order));
 
     return processes;
@@ -254,27 +254,3 @@ int send_signal(int pid, int sig)
 }
 
 } // namespace Proc
-
-//int main()
-//{
-//    Shared::init();
-//    #if 1
-//    printf("Cores:%ld, Pagesize:%ld\n", Shared::coreCount, Shared::pageSize);
-//    for (;;)
-//    {
-//        auto processes = Proc::get_processes(1);
-//        printf("-------------------------------------------------------------------\n");
-//        printf("CPU Time: %lu\n", Proc::old_cputimes);
-//        for (int i = 0; i < 5; i++)
-//        {
-//            const auto process = processes[i];
-//            std::cout << "Name: " << process.name;
-//            printf(", PID: %d, CPU Usage: %.1lf%%, CPU_T: %lu, Memory: %.1lfMB, Wakeups: %lu, Power Consumption: %.1lfmW\n",
-//                   process.pid, process.cpu_p, process.cpu_t, process.memory * 1.0 / (1 << 20), process.wakeups, process.power);
-//        }
-//        printf("-------------------------------------------------------------------\n\n");
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
-//    }
-//    #endif
-//    // Proc::send_signal(354018, 15);
-//}
