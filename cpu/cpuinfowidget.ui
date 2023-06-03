@@ -53,6 +53,21 @@ border-radius: 8px;</string>
     </widget>
    </item>
    <item>
+    <widget class="QFrame" name="core_frame">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(243, 243, 243);
+border-radius: 8px;
+</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QFrame" name="status_frame">
      <property name="styleSheet">
       <string notr="true">background-color: rgb(243, 243, 243);
@@ -183,21 +198,6 @@ border-radius: 8px;</string>
        </layout>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QFrame" name="core_frame">
-     <property name="styleSheet">
-      <string notr="true">background-color: rgb(243, 243, 243);
-border-radius: 8px;
-</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
-     </property>
-     <property name="frameShadow">
-      <enum>QFrame::Raised</enum>
-     </property>
     </widget>
    </item>
   </layout>
