@@ -35,7 +35,7 @@ MemWindow::MemWindow(QWidget *parent) : QWidget(parent),ui(new Ui::MemWindow),m_
     this->timer.start(1000 * time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(thread_mem()));
 
-    ui->graphicsView->setKbUnit();
+    // ui->graphicsView->setKbUnit();
     // connect(&this->timer,SIGNAL(timeout()),this,SLOT(ChartView::handleTimeout()));
     // QVector<QPointF> points=m_series->pointsVector();
     // points.append(QPointF(m_x,y));
