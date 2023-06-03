@@ -74,6 +74,9 @@ ChartView::ChartView(QWidget *parent)
     connect(m_series, SIGNAL(hovered(QPointF, bool)), this, SLOT(tooltip(QPointF,bool)));
 
     this->setMouseTracking(true);
+
+    type = 0;
+    unit = '%';
 }
 
 qreal ChartView::getYValue(QPointF p1, QPointF p2, qreal x)
@@ -191,7 +194,8 @@ void ChartView::tooltip(QPointF point, bool state)
         m_tooltip = new Callout(m_chart);
 
     if (state) {
-        m_tooltip->setText(QString("时刻: %1s \n使用情况: %2% ").arg((int)point.x()).arg(point.y()));
+        m_tooltip->setText(QString("时刻: %1s \n使用情况: %2 %3 ").arg((int)point.x()).arg(point.y()).arg(unit));//.arg(unit)
+        // if(type)
         m_tooltip->setAnchor(point);
         m_tooltip->setZValue(11);
         m_tooltip->updateGeometry();
@@ -203,14 +207,41 @@ void ChartView::tooltip(QPointF point, bool state)
 
 void ChartView::handleTimeout(int y)
 {
+
     QVector<QPointF> points = m_series->pointsVector();
-    points.append(QPointF(m_x, y));
+
+    if(y>100&&y<1000&&type<1){
+        type = 1;
+        m_chart->axisY()->setRange(0,1000);
+    }else if(y>1000&&type<2){
+        type = 2;
+        m_chart->axisY()->setRange(0,5);
+        unit = "MB";
+        QVector<QPointF> points_old = m_series->pointsVector();
+        points =QVector<QPointF>();
+        while(!points_old.empty()){
+            QPointF point = (points_old.front());
+            points_old.pop_front();
+            points.append(QPointF(point.x(), (float)point.y()/1024));
+        }
+    }
+
+    if(type==2){
+        points.append(QPointF(m_x, (float)y/1024));
+    }
+    else 
+        points.append(QPointF(m_x, y));
 
     if (points.size() > m_max) { //达到限值
         points.pop_front();
     }
+
     m_series->replace(points);
     m_chart->axisX()->setRange(m_x - (m_max - 1), m_x);
 
     m_x++;
+}
+void ChartView::setKbUnit()
+{
+    unit = "KB";
 }

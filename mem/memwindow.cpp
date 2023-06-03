@@ -34,6 +34,8 @@ MemWindow::MemWindow(QWidget *parent) : QWidget(parent),ui(new Ui::MemWindow),m_
 
     this->timer.start(1000 * time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(thread_mem()));
+
+    ui->graphicsView->setKbUnit();
     // connect(&this->timer,SIGNAL(timeout()),this,SLOT(ChartView::handleTimeout()));
     // QVector<QPointF> points=m_series->pointsVector();
     // points.append(QPointF(m_x,y));
@@ -143,11 +145,7 @@ void MemWindow::thread_mem()
                 memInfo->mem_useds[memInfo->maxLength-1] = memInfo->mem_used;
             // }
                 // MemWindow::showChart(memInfo->nowLength, (int)memInfo->mem_used);
-                cout << "空闲内存量: " << memInfo->mem_free << "kb\n" << endl;
-                cout << "内存总量: " << memInfo->mem_total << "kb\n" << endl;
-                cout << "块设备占用内存: " << memInfo->mem_buffers << "kb\n" << endl;
-                cout << "文件页: " << memInfo->mem_cached << "\n" << endl;
-                cout << "内存使用量: " << memInfo->mem_used << "kb\n" << endl;
+                
                 MemWindow::print_array(memInfo->mem_useds, memInfo->maxLength);
                 cout << "\n" << endl;
                 ui->label_mem_free_name->setText(gen_mem_str(memInfo->mem_free));
@@ -156,7 +154,9 @@ void MemWindow::thread_mem()
                 ui->label_mem_cached_name->setText(gen_mem_str(memInfo->mem_cached));
                 ui->label_mem_used_name->setText(QString::number(memInfo->mem_used * 100, 'f', 1)
                                                  + "%");
-                ui->graphicsView->handleTimeout((memInfo->mem_used*100));
+                // memInfo->mem_used = (float)(qrand() % 50);
+                ui->graphicsView->handleTimeout((memInfo->mem_used * 100));
+                // cout << "内存使用量: " << memInfo->mem_used*100 << "kb\n" << endl;
         }
 
     //     sleep(3);

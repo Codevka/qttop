@@ -38,6 +38,7 @@ public slots:
 
     void tooltip(QPointF point, bool state);
     void handleTimeout(int y);
+    void setKbUnit();
 
 private:
     Callout* m_tooltip;
@@ -48,7 +49,8 @@ private:
     int m_x;
     int m_max;
     bool m_isTouching;
-
+    QString unit;
+    int type;
 
 public:
     bool m_isBuoyShow;
