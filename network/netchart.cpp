@@ -7,6 +7,7 @@ netchart::netchart(QWidget *parent)
    ,m_max(80)
 {
     m_chart=new QChart;
+    m_chart->setBackgroundVisible(false);
     r_series=new QSplineSeries;
     s_series=new QSplineSeries;
     r_series->append(-1, 0);
