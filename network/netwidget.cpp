@@ -15,7 +15,10 @@ netwidget::netwidget(QWidget *parent) :
     ui->label_6->setText(ni.ipadd[0]);
     this->timer.start(1000*time_rate);
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(update_network()));
-    connect(ui->comboBox,SIGNAL(currentTextChanged()),this,SLOT(on_comboBox_currentTextChanged()));
+    connect(ui->comboBox,
+            SIGNAL(currentTextChanged(const QString &)),
+            this,
+            SLOT(on_comboBox_currentTextChanged()));
 }
 
 netwidget::~netwidget()

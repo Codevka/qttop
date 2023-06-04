@@ -88,4 +88,5 @@ int getnetinfo(netinfo &ni)
             close(fd);
         }
         }
+        return 0;
 }
