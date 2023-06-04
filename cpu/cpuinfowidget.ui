@@ -155,7 +155,7 @@ border-radius: 8px;</string>
            <string notr="true">color: dimgray;</string>
           </property>
           <property name="text">
-           <string>平均负载（10分钟）</string>
+           <string>平均负载（15分钟）</string>
           </property>
          </widget>
         </item>
