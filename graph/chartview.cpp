@@ -1,11 +1,11 @@
-    #include "chartview.h"
-#include<QDebug>
-#include<QGraphicsView>
+#include "chartview.h"
+#include <QApplication>
+#include <QCategoryAxis>
+#include <QDebug>
+#include <QGraphicsView>
 #include <QLegendMarker>
 #include <QQueue>
 #include <QtCore/QtMath>
-#include<QApplication>
-#include<QCategoryAxis>
 
 #if _MSC_VER >=1600
 #pragma execution_character_set("utf-8")

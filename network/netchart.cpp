@@ -10,11 +10,11 @@ netchart::netchart(QWidget *parent)
     r_series=new QSplineSeries;
     s_series=new QSplineSeries;
     r_series->append(-1, 0);
-    r_series->setName("r");
+    r_series->setName("下载");
     s_series->append(-1, 0);
-    s_series->setName("s");
-    r_series->setPen(QPen(Qt::blue,2.5,Qt::SolidLine));
-    s_series->setPen(QPen(Qt::red,2.5,Qt::SolidLine));
+    s_series->setName("上传");
+    r_series->setPen(QPen(QColor(32, 159, 223), 2.5, Qt::SolidLine));  // download
+    s_series->setPen(QPen(QColor(255, 152, 0), 2.5, Qt::DashDotLine)); // upload
 
     m_axisX=new QValueAxis;
     m_axisX->setRange(0, m_max);
@@ -29,17 +29,17 @@ netchart::netchart(QWidget *parent)
     m_axisY->setGridLineVisible(true);
     m_axisY->setTickCount(6);
     m_axisY->setMinorTickCount(2);
-
+    m_chart->setTitle("速度(MB/s)");
 
     m_chart->addSeries(r_series);
     m_chart->addSeries(s_series);
     m_chart->createDefaultAxes();
-    m_chart->setAxisX(m_axisX,r_series);
-    m_chart->setAxisY(m_axisY,r_series);
-    m_chart->setAxisX(m_axisX,s_series);
-    m_chart->setAxisY(m_axisY,s_series);
+    m_chart->setAxisX(m_axisX, r_series);
+    m_chart->setAxisY(m_axisY, r_series);
+    m_chart->setAxisX(m_axisX, s_series);
+    m_chart->setAxisY(m_axisY, s_series);
 
-    m_chart->legend()->hide();
+    m_chart->legend()->setAlignment(Qt::AlignBottom);
 
     this->setChart(m_chart);
     this->setRenderHint(QPainter::Antialiasing);

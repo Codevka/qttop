@@ -39,21 +39,21 @@ void netwidget::update_network() {
     }
     ui->graphicsView->handle(sv,rv);
     if(rv>1024){
-        rv_unit = "Kb/s";
+        rv_unit = "KB/s";
         rv = rv/1024;
     }
     if(rv>1024){
-        rv_unit = "Mb/s";
+        rv_unit = "MB/s";
         rv = rv/1024;
     }
     ui->label_5->setText(QString::number(rv,'f',2)+rv_unit);
 
     if(sv>1024){
-        sv_unit = "Kb/s";
+        sv_unit = "KB/s";
         sv = sv/1024;
     }
     if(sv>1024){
-        sv_unit = "Mbs";
+        sv_unit = "MB/s";
         sv = sv/1024;
     }
     ui->label_up->setText(QString::number(sv,'f',2)+sv_unit);

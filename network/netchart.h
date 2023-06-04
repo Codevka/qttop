@@ -1,32 +1,31 @@
-#ifndef CHARTVIEW_H
-#define CHARTVIEW_H
+#ifndef NETCHART_H
+#define NETCHART_H
 
-#include<QChartView>
-#include<QGraphicsView>
-#include<QMouseEvent>
-#include<QWheelEvent>
-#include<QChart>
-#include <QtWidgets/QGraphicsScene>
+#include <QApplication>
+#include <QChart>
+#include <QChartView>
+#include <QGraphicsLineItem>
+#include <QGraphicsView>
+#include <QMouseEvent>
+#include <QTimer>
+#include <QValueAxis>
+#include <QWheelEvent>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QSplineSeries>
-#include<QGraphicsLineItem>
-#include<QChart>
-#include<QTimer>
-#include <QValueAxis>
-
-
+#include <QtWidgets/QGraphicsScene>
 
 QT_CHARTS_USE_NAMESPACE
 
-
-class netchart :public QChartView
+class netchart : public QChartView
 {
+    Q_OBJECT
 public:
     netchart(QWidget *parent = 0);
+    virtual ~netchart() {}
     QLineSeries * r_series;
     QLineSeries * s_series;
-    void handle(long long  y_s,long long  y_r);
+    void handle(long long y_s, long long y_r);
 
 private:
     QChart* m_chart;
