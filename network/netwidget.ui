@@ -27,8 +27,7 @@
       <item>
        <widget class="QComboBox" name="comboBox">
         <property name="styleSheet">
-         <string notr="true">color: black;
-background-color: transparent;</string>
+         <string notr="true">color: black;</string>
         </property>
        </widget>
       </item>
