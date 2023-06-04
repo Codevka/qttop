@@ -1,8 +1,9 @@
 #ifndef _net_info_h_
 #define _net_info_h_
 
-#include<inttypes.h>
-#include<QStringList>
+#include <QStringList>
+#include <inttypes.h>
+
 typedef struct
 {
     char netname[32];
@@ -12,16 +13,16 @@ typedef struct
     uint64_t sendbytes;
     uint32_t recvdroppackets;
     uint32_t senddroppackets;
-}netflowinfo;
+} netflowinfo;
 
 typedef struct
 {
     QStringList netname;
     QStringList ipadd;
 
-    
-}netinfo;
+} netinfo;
 
 void getnetflowinfo(netflowinfo &nfi);
 int getnetinfo(netinfo &ni);
+
 #endif

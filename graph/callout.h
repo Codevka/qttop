@@ -30,10 +30,10 @@
 #ifndef CALLOUT_H
 #define CALLOUT_H
 
+#include <QChart>
 #include <QtCharts/QChartGlobal>
-#include <QtWidgets/QGraphicsItem>
 #include <QtGui/QFont>
-#include<QChart>
+#include <QtWidgets/QGraphicsItem>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -47,7 +47,7 @@ public:
     void updateGeometry();
 
     QRectF boundingRect() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

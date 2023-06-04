@@ -60,7 +60,7 @@ void init()
     }
 }
 
-}
+} // namespace Shared
 
 namespace Proc {
 std::string lower_string(const std::string &str)

@@ -1,21 +1,19 @@
 #ifndef CHARTVIEW_H
 #define CHARTVIEW_H
 
-#include<QChartView>
-#include<QGraphicsView>
-#include<QMouseEvent>
-#include<QWheelEvent>
-#include<QChart>
-#include <QtWidgets/QGraphicsScene>
+#include <QChart>
+#include <QChartView>
+#include <QGraphicsLineItem>
+#include <QGraphicsView>
+#include <QMouseEvent>
+#include <QTimer>
+#include <QValueAxis>
+#include <QWheelEvent>
 #include <QtCharts/QChart>
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QSplineSeries>
-#include<QGraphicsLineItem>
-#include"callout.h"
-#include<QChart>
-#include<QTimer>
-#include <QValueAxis>
-
+#include <QtWidgets/QGraphicsScene>
+#include "callout.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -25,11 +23,10 @@ class ChartView : public QChartView
 public:
     ChartView(QWidget *parent = 0);
 
-    qreal getYValue(QPointF p1,QPointF p2,qreal x);
-
+    qreal getYValue(QPointF p1, QPointF p2, qreal x);
 
 protected:
-    bool viewportEvent(QEvent *event)override;
+    bool viewportEvent(QEvent *event) override;
     void resizeEvent(QResizeEvent *event);
 
 public slots:
@@ -41,10 +38,10 @@ public slots:
     void setKbUnit();
 
 private:
-    Callout* m_tooltip;
-    QChart* m_chart;
-    QValueAxis* m_axisX;
-    QValueAxis* m_axisY;
+    Callout *m_tooltip;
+    QChart *m_chart;
+    QValueAxis *m_axisX;
+    QValueAxis *m_axisY;
     QTimer m_timer;
     int m_x;
     int m_max;
@@ -54,8 +51,7 @@ private:
 
 public:
     bool m_isBuoyShow;
-    QLineSeries* m_series;
-
+    QLineSeries *m_series;
 };
 
 #endif // CHARTVIEW_H

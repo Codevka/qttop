@@ -1,11 +1,11 @@
 #include "memwindow.h"
 #include "ui_memwindow.h"
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <iostream>
 #include <sys/sysinfo.h>
+#include <unistd.h>
 //多线程处理库
 #include <pthread.h>
 //网络监控部分
@@ -17,7 +17,12 @@
 using namespace std;
 
 mem *memInfo;
-MemWindow::MemWindow(QWidget *parent) : QWidget(parent),ui(new Ui::MemWindow),m_x(0),m_max(50)
+
+MemWindow::MemWindow(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::MemWindow)
+    , m_x(0)
+    , m_max(50)
 {
     ui->setupUi(this);
     memInfo = new mem();
@@ -28,8 +33,8 @@ MemWindow::MemWindow(QWidget *parent) : QWidget(parent),ui(new Ui::MemWindow),m_
     memInfo->mem_used = -1.0;
     memInfo->maxLength = 10;
     for (int i = 0; i < memInfo->maxLength; ++i) {
-            memInfo->mem_useds[i] = 0;
-        }
+        memInfo->mem_useds[i] = 0;
+    }
     memInfo->nowLength = -1;
 
     this->timer.start(1000 * time_rate);
@@ -51,6 +56,7 @@ MemWindow::~MemWindow()
     delete ui;
 }
 // int GetSysMemInfo(mem *memInfo)
+
 int MemWindow::timer_update_mem()
 { //获取系统当前可用内存
     char name[20];
@@ -59,17 +65,13 @@ int MemWindow::timer_update_mem()
     char buf1[128], buf2[128], buf3[128], buf4[128], buf5[128];
     int buff_len = 128;
     fp = fopen("/proc/meminfo", "r");
-    if (fp == NULL)
-    {
+    if (fp == NULL) {
         std::cerr << "GetSysMemInfo() error! file not exist" << std::endl;
         return -1;
     }
-    if (NULL == fgets(buf1, buff_len, fp) ||
-        NULL == fgets(buf2, buff_len, fp) ||
-        NULL == fgets(buf3, buff_len, fp) ||
-        NULL == fgets(buf4, buff_len, fp) ||
-        NULL == fgets(buf5, buff_len, fp))
-    {
+    if (NULL == fgets(buf1, buff_len, fp) || NULL == fgets(buf2, buff_len, fp)
+        || NULL == fgets(buf3, buff_len, fp) || NULL == fgets(buf4, buff_len, fp)
+        || NULL == fgets(buf5, buff_len, fp)) {
         std::cerr << "GetSysMemInfo() error! fail to read!" << std::endl;
         fclose(fp);
         return -1;
@@ -79,12 +81,12 @@ int MemWindow::timer_update_mem()
     sscanf(buf2, "%s%d", name, &(memInfo->mem_free));
     sscanf(buf4, "%s%d", name, &(memInfo->mem_buffers));
     sscanf(buf5, "%s%d", name, &(memInfo->mem_cached));
-    memInfo->mem_used = (memInfo->mem_total - memInfo->mem_free) * (float)1.0 / memInfo->mem_total;
+    memInfo->mem_used = (memInfo->mem_total - memInfo->mem_free) * (float) 1.0 / memInfo->mem_total;
 
     return 0;
 }
 
-void MemWindow::print_array(float arr[],int n)
+void MemWindow::print_array(float arr[], int n)
 {
     for (size_t i = 0; i < n; i++) {
         std::cout << arr[i] << ' ';
@@ -124,49 +126,44 @@ void MemWindow::thread_mem()
     // printf("%s\n", __FUNCTION__);
     // while (1)
     // {
-        int ret = MemWindow::timer_update_mem();
-        if (ret == -1)
-        {
-            std::cerr << "get meminfo error" << std::endl;
+    int ret = MemWindow::timer_update_mem();
+    if (ret == -1) {
+        std::cerr << "get meminfo error" << std::endl;
+    } else {
+        memInfo->nowLength++;
+        // if(memInfo->nowLength<memInfo->maxLength){
+        //     memInfo->mem_useds[memInfo->nowLength] = memInfo->mem_used;
+        // }
+        // else
+        // {
+        int i;
+        for (i = 0; i < memInfo->maxLength - 1; ++i) {
+            memInfo->mem_useds[i] = memInfo->mem_useds[i++];
         }
-        else
-        {
-            memInfo->nowLength++;
-            // if(memInfo->nowLength<memInfo->maxLength){
-            //     memInfo->mem_useds[memInfo->nowLength] = memInfo->mem_used;
-            // }
-            // else
-            // {
-                int i;
-                for (i = 0; i < memInfo->maxLength - 1; ++i)
-                {
-                    memInfo->mem_useds[i] = memInfo->mem_useds[i++];
-                }
-                memInfo->mem_useds[memInfo->maxLength-1] = memInfo->mem_used;
-            // }
-                // MemWindow::showChart(memInfo->nowLength, (int)memInfo->mem_used);
-                
-                MemWindow::print_array(memInfo->mem_useds, memInfo->maxLength);
-                cout << "\n" << endl;
-                ui->label_mem_free_name->setText(gen_mem_str(memInfo->mem_free));
-                ui->label_mem_total_name->setText(gen_mem_str(memInfo->mem_total));
-                ui->label_mem_buffers_name->setText(gen_mem_str(memInfo->mem_buffers));
-                ui->label_mem_cached_name->setText(gen_mem_str(memInfo->mem_cached));
-                ui->label_mem_used_name->setText(QString::number(memInfo->mem_used * 100, 'f', 1)
-                                                 + "%");
-                // memInfo->mem_used = (float)(qrand() % 50);
-                ui->graphicsView->handleTimeout((memInfo->mem_used * 100));
-                // cout << "内存使用量: " << memInfo->mem_used*100 << "kb\n" << endl;
-        }
+        memInfo->mem_useds[memInfo->maxLength - 1] = memInfo->mem_used;
+        // }
+        // MemWindow::showChart(memInfo->nowLength, (int)memInfo->mem_used);
+
+        MemWindow::print_array(memInfo->mem_useds, memInfo->maxLength);
+        cout << "\n" << endl;
+        ui->label_mem_free_name->setText(gen_mem_str(memInfo->mem_free));
+        ui->label_mem_total_name->setText(gen_mem_str(memInfo->mem_total));
+        ui->label_mem_buffers_name->setText(gen_mem_str(memInfo->mem_buffers));
+        ui->label_mem_cached_name->setText(gen_mem_str(memInfo->mem_cached));
+        ui->label_mem_used_name->setText(QString::number(memInfo->mem_used * 100, 'f', 1) + "%");
+        // memInfo->mem_used = (float)(qrand() % 50);
+        ui->graphicsView->handleTimeout((memInfo->mem_used * 100));
+        // cout << "内存使用量: " << memInfo->mem_used*100 << "kb\n" << endl;
+    }
 
     //     sleep(3);
     // }
 }
 //  https://mirrors.tuna.tsinghua.edu.cn/qt/online/qtsdkrepository/linux_x64/desktop/qt5_5128/
 //
-void MemWindow::showChart(int m_x,int y){
-    if(ui->graphicsView->isVisible())
-    {//在可视的情况下刷新数据
+void MemWindow::showChart(int m_x, int y)
+{
+    if (ui->graphicsView->isVisible()) { //在可视的情况下刷新数据
         // QVector<QPointF> points=m_series->pointsVector();
         // points.append(QPointF(m_x,y));
 

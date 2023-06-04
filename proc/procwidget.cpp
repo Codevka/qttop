@@ -1,14 +1,17 @@
 #include "procwidget.h"
-#include "process.h"
-#include "ui_procwidget.h"
 #include <QAction>
 #include <QDebug>
 #include <QMenu>
 #include <QStandardItemModel>
+#include "process.h"
+#include "ui_procwidget.h"
 #include <iostream>
 #include <signal.h>
 
-procwidget::procwidget(QWidget *parent) : QWidget(parent), ui(new Ui::procwidget) {
+procwidget::procwidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::procwidget)
+{
     ui->setupUi(this);
 
     column = 2;
@@ -18,7 +21,11 @@ procwidget::procwidget(QWidget *parent) : QWidget(parent), ui(new Ui::procwidget
     model->setColumnCount(5);
 
     QStringList headers;
-    headers << "PID" << "进程名" << "CPU占用率" << "内存" << "功耗";
+    headers << "PID"
+            << "进程名"
+            << "CPU占用率"
+            << "内存"
+            << "功耗";
     model->setHorizontalHeaderLabels(headers);
 
     Shared::init();
@@ -44,10 +51,11 @@ procwidget::~procwidget()
     delete ui;
 }
 
-void procwidget::sort_by_column(int column, Qt::SortOrder order) {
+void procwidget::sort_by_column(int column, Qt::SortOrder order)
+{
     ui->tableView->horizontalHeader()->setSortIndicatorShown(true);
     this->column = column;
-    this->order  = order;
+    this->order = order;
     qDebug() << "Sort Event: " << column << order;
     // force update
     timer_update_proc();
@@ -60,9 +68,12 @@ void procwidget::timer_update_proc()
     int length = processes.size();
     for (size_t i = 0; i < length; i++) {
         const auto process = processes[i];
-        QString cpu; cpu.sprintf("%.1lf%%", process.cpu_p);
-        QString mem; mem.sprintf("%.1lfMB", process.memory * 1.0 / (1 << 20));
-        QString power; power.sprintf("%.1lfmW", process.power);
+        QString cpu;
+        cpu.sprintf("%.1lf%%", process.cpu_p);
+        QString mem;
+        mem.sprintf("%.1lfMB", process.memory * 1.0 / (1 << 20));
+        QString power;
+        power.sprintf("%.1lfmW", process.power);
         model->setItem(i, 0, new QStandardItem(QString::number(process.pid)));
         model->setItem(i, 1, new QStandardItem(QString::fromStdString(process.name)));
         model->setItem(i, 2, new QStandardItem(cpu));
@@ -84,15 +95,9 @@ void procwidget::on_tableView_customContextMenuRequested(const QPoint &pos)
         QAction *stopProc = menu.addAction("挂起进程");
         QAction *termProc = menu.addAction("结束进程");
         QAction *killProc = menu.addAction("强制退出");
-        connect(stopProc, &QAction::triggered, [=](){
-            Proc::send_signal(pid, SIGSTOP);
-        });
-        connect(termProc, &QAction::triggered, [=](){
-            Proc::send_signal(pid, SIGTERM);
-        });
-        connect(killProc, &QAction::triggered, [=](){
-            Proc::send_signal(pid, SIGKILL);
-        });
+        connect(stopProc, &QAction::triggered, [=]() { Proc::send_signal(pid, SIGSTOP); });
+        connect(termProc, &QAction::triggered, [=]() { Proc::send_signal(pid, SIGTERM); });
+        connect(killProc, &QAction::triggered, [=]() { Proc::send_signal(pid, SIGKILL); });
         menu.exec(QCursor::pos());
     }
 }

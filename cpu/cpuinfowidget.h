@@ -1,17 +1,18 @@
 #ifndef CPUINFOWIDGET_H
 #define CPUINFOWIDGET_H
 
-#include "CpuInfoHandler.h"
 #include <QLabel>
 #include <QTimer>
 #include <QWidget>
+#include "CpuInfoHandler.h"
 #include <memory>
 
 namespace Ui {
-    class CpuInfoWidget;
+class CpuInfoWidget;
 }
 
-class CpuInfoWidget : public QWidget {
+class CpuInfoWidget : public QWidget
+{
     Q_OBJECT
 
 public:

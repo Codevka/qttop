@@ -7,7 +7,7 @@
 #include <QQueue>
 #include <QtCore/QtMath>
 
-#if _MSC_VER >=1600
+#if _MSC_VER >= 1600
 #pragma execution_character_set("utf-8")
 #endif
 
@@ -31,32 +31,31 @@ ChartView::ChartView(QWidget *parent)
     , m_x(0)
     , m_max(80)
 {
-    m_series=new QLineSeries;
-    m_chart=new QChart;
+    m_series = new QLineSeries;
+    m_chart = new QChart;
     m_chart->setBackgroundVisible(false);
 
-    m_series=new QLineSeries;
+    m_series = new QLineSeries;
     m_series->append(-1, 0);
     m_series->setName("ss");
     m_chart->addSeries(m_series);
     m_chart->createDefaultAxes();
 
-    m_axisX=new QValueAxis;
+    m_axisX = new QValueAxis;
     m_axisX->setRange(0, m_max);
     m_axisX->setLineVisible(false);
     m_axisX->setTickCount(11);     //标记的个数
     m_axisX->setMinorTickCount(5); //次标记的个数
     m_axisX->setLabelsVisible(false);
 
-    m_axisY=new QValueAxis;
-    m_axisY->setRange(0,100);
+    m_axisY = new QValueAxis;
+    m_axisY->setRange(0, 100);
     m_axisY->setGridLineVisible(true);
     m_axisY->setTickCount(6);
     m_axisY->setMinorTickCount(2);
-    
 
-    m_chart->setAxisX(m_axisX,m_series);
-    m_chart->setAxisY(m_axisY,m_series);
+    m_chart->setAxisX(m_axisX, m_series);
+    m_chart->setAxisY(m_axisY, m_series);
 
     m_chart->legend()->hide();
 
@@ -71,7 +70,7 @@ ChartView::ChartView(QWidget *parent)
     connectMarkers();
 
     //浮框
-    connect(m_series, SIGNAL(hovered(QPointF, bool)), this, SLOT(tooltip(QPointF,bool)));
+    connect(m_series, SIGNAL(hovered(QPointF, bool)), this, SLOT(tooltip(QPointF, bool)));
 
     this->setMouseTracking(true);
 
@@ -81,15 +80,13 @@ ChartView::ChartView(QWidget *parent)
 
 qreal ChartView::getYValue(QPointF p1, QPointF p2, qreal x)
 {
-    qreal y=(p2.y()-p1.y())/(p2.x()-p1.x())*(x-p1.x())+p1.y();
+    qreal y = (p2.y() - p1.y()) / (p2.x() - p1.x()) * (x - p1.x()) + p1.y();
     return y;
-
 }
 
 bool ChartView::viewportEvent(QEvent *event)
 {
     if (event->type() == QEvent::TouchBegin) {
-
         m_isTouching = true;
 
         chart()->setAnimationOptions(QChart::NoAnimation);
@@ -101,34 +98,28 @@ void ChartView::resizeEvent(QResizeEvent *event)
 {
     if (scene()) {
         scene()->setSceneRect(QRect(QPoint(0, 0), event->size()));
-         m_chart->resize(event->size());
+        m_chart->resize(event->size());
     }
     QChartView::resizeEvent(event);
 }
 
-
-
 void ChartView::connectMarkers()
 {
-    foreach (QLegendMarker* marker, m_chart->legend()->markers()) {
+    foreach (QLegendMarker *marker, m_chart->legend()->markers()) {
         QObject::disconnect(marker, SIGNAL(clicked()), this, SLOT(handleMarkerClicked()));
         QObject::connect(marker, SIGNAL(clicked()), this, SLOT(handleMarkerClicked()));
     }
-
 }
 
 void ChartView::handleMarkerClicked()
 {
-
-    QLegendMarker* marker = qobject_cast<QLegendMarker*> (sender());
+    QLegendMarker *marker = qobject_cast<QLegendMarker *>(sender());
     Q_ASSERT(marker);
 
     switch (marker->type())
 
     {
-        case QLegendMarker::LegendMarkerTypeXY:
-        {
-
+    case QLegendMarker::LegendMarkerTypeXY: {
         marker->setVisible(true);
 
         qreal alpha;
@@ -137,55 +128,47 @@ void ChartView::handleMarkerClicked()
         QPen pen = marker->pen();
         color = pen.color();
 
-        if(color.alphaF()==1.0){
+        if (color.alphaF() == 1.0) {
             //未点击
-            alpha=0.2;
+            alpha = 0.2;
 
-            QFont font=marker->font();
+            QFont font = marker->font();
             font.setBold(true);
             marker->setFont(font);
 
-        }else {
+        } else {
             //已点击
-            alpha=1.0;
+            alpha = 1.0;
 
-            QFont font=marker->font();
+            QFont font = marker->font();
             font.setBold(false);
             marker->setFont(font);
         }
 
-        QList<QAbstractSeries *> seriesList=m_chart->series();
+        QList<QAbstractSeries *> seriesList = m_chart->series();
 
-        for(int i=0;i<seriesList.size();i++){
-
-           QLineSeries* series=(QLineSeries*)seriesList.at(i);
-           if(series!=marker->series()){
-               QPen seriesPen=series->pen();
-               QColor color=seriesPen.color();
-               color.setAlphaF(alpha);
-               seriesPen.setColor(color);
-               series->setPen(seriesPen);
-
-
-           }
+        for (int i = 0; i < seriesList.size(); i++) {
+            QLineSeries *series = (QLineSeries *) seriesList.at(i);
+            if (series != marker->series()) {
+                QPen seriesPen = series->pen();
+                QColor color = seriesPen.color();
+                color.setAlphaF(alpha);
+                seriesPen.setColor(color);
+                series->setPen(seriesPen);
+            }
         }
 
         color.setAlphaF(alpha);
         pen.setColor(color);
         marker->setPen(pen);
 
-
-
         break;
-        }
-    default:
-        {
+    }
+    default: {
         qDebug() << "Unknown marker type";
         break;
-        }
     }
-
-
+    }
 }
 
 void ChartView::tooltip(QPointF point, bool state)
@@ -194,7 +177,10 @@ void ChartView::tooltip(QPointF point, bool state)
         m_tooltip = new Callout(m_chart);
 
     if (state) {
-        m_tooltip->setText(QString("时刻: %1s \n使用情况: %2 %3 ").arg((int)point.x()).arg(point.y()).arg(unit));//.arg(unit)
+        m_tooltip->setText(QString("时刻: %1s \n使用情况: %2 %3 ")
+                               .arg((int) point.x())
+                               .arg(point.y())
+                               .arg(unit)); //.arg(unit)
         // if(type)
         m_tooltip->setAnchor(point);
         m_tooltip->setZValue(11);
@@ -207,29 +193,27 @@ void ChartView::tooltip(QPointF point, bool state)
 
 void ChartView::handleTimeout(int y)
 {
-
     QVector<QPointF> points = m_series->pointsVector();
 
-    if(y>100&&y<1000&&type<1){
+    if (y > 100 && y < 1000 && type < 1) {
         type = 1;
-        m_chart->axisY()->setRange(0,1000);
-    }else if(y>1000&&type<2){
+        m_chart->axisY()->setRange(0, 1000);
+    } else if (y > 1000 && type < 2) {
         type = 2;
-        m_chart->axisY()->setRange(0,5);
+        m_chart->axisY()->setRange(0, 5);
         unit = "MB";
         QVector<QPointF> points_old = m_series->pointsVector();
-        points =QVector<QPointF>();
-        while(!points_old.empty()){
+        points = QVector<QPointF>();
+        while (!points_old.empty()) {
             QPointF point = (points_old.front());
             points_old.pop_front();
-            points.append(QPointF(point.x(), (float)point.y()/1024));
+            points.append(QPointF(point.x(), (float) point.y() / 1024));
         }
     }
 
-    if(type==2){
-        points.append(QPointF(m_x, (float)y/1024));
-    }
-    else 
+    if (type == 2) {
+        points.append(QPointF(m_x, (float) y / 1024));
+    } else
         points.append(QPointF(m_x, y));
 
     if (points.size() > m_max) { //达到限值

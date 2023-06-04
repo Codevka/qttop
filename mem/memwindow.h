@@ -1,10 +1,10 @@
 #ifndef MEMWINDOW_H
 #define MEMWINDOW_H
 
-#include <QWidget>
 #include <QTimer>
-#include<QtCharts>
-#include<QTimer>
+#include <QTimer>
+#include <QWidget>
+#include <QtCharts>
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -40,19 +40,18 @@ public:
 private slots:
     void thread_mem(void);
     int timer_update_mem(void);
-    void print_array(float arr[],int n);
+    void print_array(float arr[], int n);
     void showChart(int x, int y);
 
 private:
     Ui::MemWindow *ui;
-    QLineSeries* m_series;
-    QChart* m_chart;
-    QValueAxis* m_axisX;
-    QValueAxis* m_axisY;
+    QLineSeries *m_series;
+    QChart *m_chart;
+    QValueAxis *m_axisX;
+    QValueAxis *m_axisY;
     QTimer m_timer;
     int m_x;
     int m_max;
-
 };
 
 #endif // MEMWINDOW_H

@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include "cpu/cpuinfowidget.h"
 #include "mem/memwindow.h"
+#include "network/netwidget.h"
 #include "proc/procwidget.h"
 #include "ui_mainwindow.h"
-#include "network/netwidget.h"
 
 #include <QTabBar>
 #include <QVBoxLayout>
@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
                                   QTabBar::tab:hover:!selected { background-color: #4FC3F7; color: #FAFAFA; } \
                                  ");
 
-    auto cpuLayout     = new QVBoxLayout;
+    auto cpuLayout = new QVBoxLayout;
     auto cpuInfoWidget = new CpuInfoWidget;
     cpuLayout->addWidget(cpuInfoWidget);
 
@@ -36,12 +36,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->cpu_tab->setLayout(cpuLayout);
     ui->network_tab->setLayout(networklayout);
 
-    auto memLayout     = new QVBoxLayout;
+    auto memLayout = new QVBoxLayout;
     auto memWindow = new MemWindow;
     memLayout->addWidget(memWindow);
     ui->memory_tab->setLayout(memLayout);
 
-    auto procLayout     = new QVBoxLayout;
+    auto procLayout = new QVBoxLayout;
     auto proc_widget = new procwidget;
     procLayout->addWidget(proc_widget);
     ui->process_tab->setLayout(procLayout);

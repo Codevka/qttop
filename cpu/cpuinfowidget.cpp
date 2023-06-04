@@ -1,5 +1,5 @@
-#include "CpuInfoHandler.h"
 #include "cpuinfowidget.h"
+#include "CpuInfoHandler.h"
 #include "ui_cpuinfowidget.h"
 
 #include <QDebug>
@@ -21,7 +21,10 @@ QString get_core_color(double val)
     }
 }
 
-CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuInfoWidget) {
+CpuInfoWidget::CpuInfoWidget(QWidget *parent)
+    : QWidget(parent)
+    , ui(new Ui::CpuInfoWidget)
+{
     ui->setupUi(this);
     this->cpu_info_handler = CpuInfoHandler::getInstance();
     {
@@ -71,16 +74,19 @@ CpuInfoWidget::CpuInfoWidget(QWidget *parent) : QWidget(parent), ui(new Ui::CpuI
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_cpu_graph()));
     connect(&this->timer, SIGNAL(timeout()), this, SLOT(timer_update_core_percent()));
 }
-CpuInfoWidget::~CpuInfoWidget() {
+CpuInfoWidget::~CpuInfoWidget()
+{
     delete ui;
 }
 
-void CpuInfoWidget::timer_update_cpu_hz() {
+void CpuInfoWidget::timer_update_cpu_hz()
+{
     this->cpu_info_handler->updateCpuHz();
     ui->label_cpu_hz->setText(QString("基准频率：%1").arg(this->cpu_info_handler->cpu_hz));
 }
 
-void CpuInfoWidget::timer_update_cpu_collect() {
+void CpuInfoWidget::timer_update_cpu_collect()
+{
     this->cpu_info_handler->collectCpuInfo();
     ui->label_cpu_hz->setText(QString("%1").arg(this->cpu_info_handler->cpu_hz));
     ui->label_load_avg_1->setText(
@@ -94,11 +100,13 @@ void CpuInfoWidget::timer_update_cpu_collect() {
                                        .arg(this->cpu_info_handler->cur_cpu.cpu_percent % 10));
 }
 
-void CpuInfoWidget::timer_update_cpu_graph() {
+void CpuInfoWidget::timer_update_cpu_graph()
+{
     ui->cpu_graphicsView->handleTimeout(this->cpu_info_handler->cur_cpu.cpu_percent / 10);
 }
 
-void CpuInfoWidget::timer_update_core_percent() {
+void CpuInfoWidget::timer_update_core_percent()
+{
     for (uint32_t i = 0; i < this->cpu_info_handler->core_num; i++) {
         this->labels[i * 2]->setText(QString("CPU%1: ").arg(i));
         this->labels[i * 2 + 1]->setText(

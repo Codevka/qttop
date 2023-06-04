@@ -1,11 +1,11 @@
 #ifndef PROCWIDGET_H
 #define PROCWIDGET_H
 
-#include <QWidget>
-#include <QTimer>
 #include <QStandardItemModel>
-#include <vector>
+#include <QTimer>
+#include <QWidget>
 #include "process.h"
+#include <vector>
 
 namespace Ui {
 class procwidget;
@@ -32,7 +32,7 @@ private:
 
     QTimer timer;
     double time_rate = 2;
-    int           column;
+    int column;
     Qt::SortOrder order;
 
     std::vector<Proc::ProcessInfo> processes;
